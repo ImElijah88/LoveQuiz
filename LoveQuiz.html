@@ -635,9 +635,9 @@
                 Please take your time to reflect on each question and share your thoughtful insights. There are no right or wrong answers, only perspectives that help us understand each other more deeply as we consider our beautiful future together. Your honest thoughts are truly cherished.
             </p>
             <ul class="romantic-list handwritten-guide-text mt-4">
-                <li>To fill out digitally: Open this file in any web browser. Type directly into the text boxes, which will expand automatically as you write more.</li>
+                <li>To fill out digitally: Open this file in any web browser. Type directly into the text boxes. The pre-filled suggestions will disappear when you type, and reappear if you leave a box empty.</li>
                 <li>To save as PDF: Click the "Download as PDF" button at the bottom of the page. This will open your browser's print dialog, where you can select "Save as PDF" (or a similar option like "Microsoft Print to PDF") as the destination.</li>
-                <li>To send your answers directly: Fill out the questionnaire, then use the "Send Answers Directly to Elijah" button below for seamless submission.</li>
+                <li>To send your answers directly: Fill out the questionnaire, then use the "Send Answers Directly to Elijah" button below for seamless submission. The acknowledgment section will appear on the page when you agree to the terms.</li>
                 <li class="mt-4 no-print">Once completed, we can discuss your responses together to deepen our mutual understanding.</li>
             </ul>
         </details>
@@ -870,7 +870,7 @@
             q6: "True friendships are vital for support, but our primary bond in marriage takes precedence, integrating friends into our shared life harmoniously.",
             q7: "Deep compatibility arises from shared faith, mutual respect, and a willingness to grow together in love and understanding, accepting imperfections.",
             q8: "Building a strong front means prioritizing our marital bond above all, always presenting a united stance, especially to external influences.",
-            q9: "How important are both private intimacy and public respect in building a strong and lasting relationship?",
+            q9: "Both private intimacy and public respect are cornerstones for a lasting bond; private intimacy deepens our connection, while public respect honors our relationship to the world.",
             q10: "I enjoy time together most when we are engaged in purposeful activities, growing in faith, or simply cherishing quiet moments of mutual devotion.",
             q11: "Quality time means intentional moments of connection, spiritual nourishment, and shared vision planning, focusing on prime, dedicated time together.",
             q12: "In challenges, support means active listening, prayer, and seeking divine guidance. Communication is clear, honest, and rooted in love and patience.",
@@ -886,4 +886,270 @@
 
             const modalOverlay = document.createElement('div');
             modalOverlay.className = 'modal-overlay';
-            modalOver
+            modalOverlay.id = modalId;
+            modalOverlay.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close-btn" onclick="closeCustomModal('${modalId}')">X</button>
+                    ${contentHtml}
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
+
+            // Dynamically adjust textarea height within modal if it exists
+            const answersTextarea = document.getElementById('emailAnswersTextarea');
+            if (answersTextarea) {
+                answersTextarea.style.height = 'auto';
+                answersTextarea.style.maxHeight = 'calc(90vh - 150px)';
+                answersTextarea.style.overflowY = 'auto';
+                answersTextarea.style.height = (answersTextarea.scrollHeight) + 'px';
+            }
+        }
+
+        function closeCustomModal(modalId = 'customModalOverlay') {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Function to set initial answer in textarea
+        function setInitialAnswer(textarea) {
+            const qId = textarea.id;
+            // Ensure prefilledAnswers has the key
+            if (prefilledAnswers[qId]) {
+                textarea.value = prefilledAnswers[qId];
+                textarea.classList.add('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            }
+        }
+
+        // Handle textarea focus (clear pre-filled text)
+        function handleFocus(textarea) {
+            const qId = textarea.id;
+            // Check if current value matches prefilled before clearing
+            if (textarea.value === prefilledAnswers[qId]) {
+                textarea.value = '';
+                textarea.classList.remove('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+            }
+        }
+
+        // Handle textarea blur (restore pre-filled text if empty)
+        function handleBlur(textarea) {
+            const qId = textarea.id;
+            if (textarea.value.trim() === '') {
+                // Restore prefilled text if empty
+                textarea.value = prefilledAnswers[qId];
+                textarea.classList.add('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            }
+        }
+
+        // Auto-resize textareas based on content (for user input)
+        document.addEventListener('input', function (event) {
+            if (event.target.tagName.toLowerCase() === 'textarea' && !event.target.classList.contains('initial-answer')) {
+                event.target.style.height = 'auto';
+                event.target.style.height = (event.target.scrollHeight) + 'px';
+            }
+        });
+
+        // Function to validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // --- Document Ready and Form Submission Logic ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all textareas with pre-filled answers on load
+            document.querySelectorAll('textarea').forEach(textarea => {
+                setInitialAnswer(textarea);
+            });
+
+            // Get form elements and the form itself
+            const loveQuizForm = document.getElementById('loveQuizForm');
+            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
+            const fullNameInput = document.getElementById('fullNameInput');
+            const signatureBox = document.getElementById('signatureBox');
+            const displayedSignature = document.getElementById('displayedSignature');
+            const legalTermsDetails = document.getElementById('legalTermsDetails');
+            const senderEmailInput = document.getElementById('senderEmail');
+            const submitFormButton = document.getElementById('submitFormButton');
+
+
+            // Toggle signature box visibility based on checkbox
+            if (consentCheckboxFinal && fullNameInput && signatureBox && displayedSignature) {
+                consentCheckboxFinal.addEventListener('change', function() {
+                    if (this.checked) {
+                        signatureBox.classList.remove('hidden');
+                        if (fullNameInput.value.trim() !== '') {
+                            displayedSignature.textContent = fullNameInput.value.trim();
+                        }
+                    } else {
+                        signatureBox.classList.add('hidden');
+                        displayedSignature.textContent = '';
+                        fullNameInput.value = '';
+                    }
+                });
+
+                fullNameInput.addEventListener('input', function() {
+                    displayedSignature.textContent = this.value.trim();
+                });
+            }
+
+            // *** MAIN FORM SUBMISSION LOGIC FOR FORMSPREE ***
+            if (loveQuizForm && submitFormButton) {
+                loveQuizForm.addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Prevent default browser form submission
+
+                    // --- 1. Perform Validations ---
+                    if (!legalTermsDetails.open) {
+                         showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Review Terms First!</p>
+                            <p class="text-gray-700 mb-6">Please expand "Click to review Terms & Conditions" to review the terms before proceeding.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        legalTermsDetails.open = true; // Auto-open for user
+                        return;
+                    }
+
+                    if (!consentCheckboxFinal || !consentCheckboxFinal.checked) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Consent Required!</p>
+                            <p class="text-gray-700 mb-6">Please check the box to agree to the Terms, Consent & Non-Disclosure before proceeding.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        consentCheckboxFinal.focus();
+                        return;
+                    }
+
+                    const senderEmail = senderEmailInput.value.trim();
+                    if (!senderEmail) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Oops! Your Email is Missing</p>
+                            <p class="text-gray-700 mb-6">Please enter your email address to proceed.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        return;
+                    }
+                    if (!isValidEmail(senderEmail)) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Invalid Email Format</p>
+                            <p class="text-gray-700 mb-6">Please enter a valid email address (e.g., yourname@example.com) to proceed.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        return;
+                    }
+
+                    const acknowledgedName = fullNameInput.value.trim();
+                    if (!acknowledgedName) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Please Acknowledge!</p>
+                            <p class="text-gray-700 mb-6">Kindly type your full name in the acknowledgment section to confirm your consent.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        fullNameInput.focus();
+                        return;
+                    }
+
+                    // --- 2. Prepare Form Data for Formspree ---
+                    const formData = new FormData(loveQuizForm);
+
+                    // Filter out pre-filled answers if they haven't been changed by the user.
+                    // Formspree will receive empty strings for these, which is what we want.
+                    document.querySelectorAll('main textarea').forEach(textarea => {
+                        const qId = textarea.id;
+                        if (prefilledAnswers[qId] && textarea.value.trim() === prefilledAnswers[qId]) {
+                            formData.set(textarea.name, ''); // Set to empty string
+                        }
+                    });
+
+                    // Manually add the legal consent text and acknowledgment details
+                    // Formspree will include these as separate fields in the email
+                    formData.append('--- Legal Consent & Acknowledgment Details ---', ''); // Separator
+
+                    // Extract text from the legal terms details. outerText gets visible text.
+                    // We need to temporarily force it open to get all text.
+                    const legalTermsDetailsElement = document.getElementById('legalTermsDetails');
+                    if (legalTermsDetailsElement) {
+                        const wasOpen = legalTermsDetailsElement.open; // Store original state
+                        legalTermsDetailsElement.open = true; // Force open
+                        // Get the full text content, clean it up a bit
+                        const fullLegalText = legalTermsDetailsElement.textContent.replace(/\s+/g, ' ').trim();
+                        formData.append('Full Legal Terms and Conditions', fullLegalText);
+                        legalTermsDetailsElement.open = wasOpen; // Revert to original state
+                    }
+                    
+                    const consentStatus = consentCheckboxFinal.checked ? 'Agreed' : 'Not Agreed';
+                    const consentLabelElement = document.querySelector('label[for="consentCheckboxFinal"]');
+                    if (consentLabelElement) {
+                        // Extract just the core text of the label, removing checkbox/other elements if present
+                        const consentLabelText = Array.from(consentLabelElement.childNodes)
+                                                    .filter(node => node.nodeType === Node.TEXT_NODE)
+                                                    .map(node => node.textContent.trim())
+                                                    .join(' ');
+                        formData.append('Consent Acknowledgment', `${consentLabelText} - ${consentStatus}`);
+                    }
+
+                    const fullNameInputText = fullNameInput.value.trim();
+                    if (fullNameInputText) {
+                        formData.append('Acknowledged By (Typed Name)', fullNameInputText);
+                    }
+
+
+                    // --- 3. Submit to Formspree via Fetch API ---
+                    try {
+                        const response = await fetch(loveQuizForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json' // Essential for AJAX submission without redirect
+                            }
+                        });
+
+                        if (response.ok) {
+                            showCustomModal(`
+                                <p class="text-lg font-semibold mb-4">Success! Your Answers Have Been Sent!</p>
+                                <p class="text-gray-700 mb-6">Thank you for sharing your thoughts. Elijah will receive your answers directly.</p>
+                                <button class="btn-primary" onclick="closeCustomModal()">Close</button>
+                            `);
+                            loveQuizForm.reset(); // Clear the form after successful submission
+                            // Re-initialize prefilled answers after reset
+                            document.querySelectorAll('textarea').forEach(textarea => {
+                                setInitialAnswer(textarea);
+                            });
+                            consentCheckboxFinal.checked = false; // Uncheck consent
+                            signatureBox.classList.add('hidden'); // Hide signature box
+                            displayedSignature.textContent = ''; // Clear displayed signature
+                        } else {
+                            // Formspree returned an error (e.g., validation fail)
+                            const data = await response.json();
+                            let errorMessage = "There was an error sending your answers. Please try again.";
+                            if (data.errors && data.errors.length > 0) {
+                                errorMessage = data.errors.map(err => err.message).join(", ");
+                            }
+                            showCustomModal(`
+                                <p class="text-lg font-semibold mb-4">Submission Failed!</p>
+                                <p class="text-gray-700 mb-6">${errorMessage}</p>
+                                <button class="btn-primary" onclick="closeCustomModal()">Close</button>
+                            `);
+                        }
+                    } catch (error) {
+                        // Network error or other fetch-related issues
+                        console.error('Submission error:', error);
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Network Error!</p>
+                            <p class="text-gray-700 mb-6">Could not connect to the submission service. Please check your internet connection and try again.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Close</button>
+                        `);
+                    }
+                });
+            }
+        });
+        
+        // Ensure the PDF download button still works as intended (no changes needed for this)
+    </script>
+</body>
+</html>
