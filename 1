@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Shared Journey: A Relationship Questionnaire</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Dancing Script for a handwritten feel (still used for questions) -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom font for a more modern look, and romantic color palette */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #fcf4f8; /* Very light pink/blush background */
+            color: #4a2f4c; /* Darker plum/wine text */
+        }
+        /* Style for textareas to ensure good readability */
+        textarea {
+            resize: vertical; /* Allow vertical resizing manually, but JS will auto-grow */
+            min-height: 80px; /* Minimum height for display */
+            padding: 10px;
+            border-radius: 8px; /* Rounded corners for textareas */
+            border: 1px solid #e0b4c7; /* Softer border */
+            background-color: #fcebeb; /* Lighter pink for input */
+            transition: all 0.2s ease-in-out;
+            line-height: 1.6; /* Slightly more space for readability */
+            overflow: hidden; /* Hide scrollbar, as content will expand */
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #d18aab; /* Romantic pink focus border */
+            box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2); /* Soft pink shadow on focus */
+        }
+        /* Style for the initial pre-filled answer text */
+        textarea.initial-answer {
+            color: #94a3b8; /* Lighter grey for pre-filled text */
+            font-style: italic;
+        }
+
+        /* Overriding default Tailwind colors for a romantic theme */
+        .text-blue-800 { /* Header color */
+            color: #8c2f5d; /* Deeper rose/plum for header */
+        }
+        .text-gray-600, .text-gray-700 { /* Body text color */
+            color: #5d4a66; /* Softer, slightly purplish gray */
+        }
+        .bg-blue-50, .border-blue-200 { /* Instructions/Footer background/border */
+            background-color: #f8eaf0; /* Light rose blush */
+            border-color: #e6cee0; /* Softer border */
+        }
+        .text-blue-700 { /* Section headers color */
+            color: #7b4f7f; /* Plum-purple for section headers */
+        }
+        .bg-gray-50 { /* Question card background */
+            background-color: #fcf6f9; /* Very light rose for question cards */
+            border-color: #f2e2ec; /* Subtle border */
+        }
+        .text-gray-800 { /* Question label color */
+            color: #6a4f70; /* Slightly darker plum for labels */
+        }
+        /* Button styling for a romantic look */
+        .btn-primary {
+            @apply px-6 py-3 font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105;
+            background-color: #c75b8a; /* Romantic pink/rose */
+            color: white;
+            box-shadow: 0 4px 6px rgba(199, 91, 138, 0.2);
+        }
+        .btn-primary:hover {
+            background-color: #b34a79; /* Darker pink on hover */
+        }
+        /* Specific styling for the PDF download button */
+        .btn-pdf {
+             background-color: #75a76c; /* Softer green */
+             box-shadow: 0 4px 6px rgba(117, 167, 108, 0.2);
+        }
+        .btn-pdf:hover {
+            background-color: #629059; /* Darker green on hover */
+        }
+        /* Styling for the new email answers text area in the custom alert */
+        #emailAnswersTextarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e0b4c7;
+            background-color: #fcebeb;
+            font-family: "Inter", sans-serif;
+            color: #4a2f4c;
+            resize: vertical;
+            margin-top: 10px;
+            margin-bottom: 15px; /* Added space below textarea */
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e0b4c7;
+            background-color: #fcebeb;
+            transition: all 0.2s ease-in-out;
+            margin-top: 5px;
+        }
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #d18aab;
+            box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2);
+        }
+
+        /* Specific print styles */
+        @media print {
+            body {
+                background-color: #fff;
+                color: #000;
+            }
+            .no-print {
+                display: none;
+            }
+            textarea {
+                border: 1px dashed #94a3b8; /* Dashed border for print to indicate fillable area */
+                background-color: #fff;
+                min-height: 120px; /* More space for writing on print */
+                height: auto !important; /* Ensure height adapts for print */
+                overflow: hidden !important; /* No scrollbars on print */
+                padding: 5px;
+            }
+            /* Ensure the initial-answer styling is removed for printing if no actual user input */
+            textarea.initial-answer {
+                color: #000 !important; /* Ensure black text for print */
+                font-style: normal !important; /* Remove italic for print */
+            }
+
+            /* Adjust margins for printing */
+            .p-4, .sm:p-6, .md:p-8 {
+                padding: 1rem !important;
+            }
+            .max-w-4xl {
+                max-width: 100% !important;
+                width: 100% !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            .rounded-2xl {
+                border-radius: 0 !important;
+            }
+            /* Remove shadows and borders for cleaner print */
+            .shadow-xl, .shadow-sm, .border {
+                box-shadow: none !important;
+                border: none !important;
+            }
+            .bg-white, .bg-blue-50, .bg-gray-50 {
+                background-color: #fff !important;
+            }
+            /* Ensure details content is always open when printing */
+            details[open] summary ~ * { /* General rule for all details content */
+                display: block !important;
+            }
+            details summary::after { /* Hide plus/minus on print for all details */
+                 content: none !important;
+            }
+            /* Specific rule to ensure the main legal details section expands on print */
+            #legalTermsDetails summary ~ * {
+                display: block !important;
+            }
+        }
+        /* Custom modal overlay for confirmation */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000; /* Higher than other elements */
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 600px; /* Smaller modal width */
+            width: 90%; /* Responsive width */
+            max-height: 90vh; /* Limit height to viewport height */
+            overflow-y: auto; /* Allow scrolling within the modal if content exceeds max-height */
+            text-align: center;
+            font-family: "Inter", sans-serif;
+            color: #334155;
+            position: relative; /* For absolute positioning of close button */
+            display: flex; /* Flex for content alignment */
+            flex-direction: column; /* Stack content vertically */
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af; /* Gray color for the X */
+            padding: 5px;
+            line-height: 1; /* Adjust line height for better centering of X */
+        }
+        .modal-close-btn:hover {
+            color: #4a2f4c; /* Darker color on hover */
+        }
+
+        /* Heart-shaped button specific styles */
+        .btn-heart {
+            background-color: #3b82f6; /* Blue background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between text and heart */
+        }
+        .btn-heart:hover {
+            background-color: #2563eb; /* Darker blue on hover */
+        }
+        .btn-heart .heart-icon {
+            font-size: 1.25rem; /* Size of the heart emoji */
+        }
+
+        /* Custom list styling for the guide section */
+        .romantic-list {
+            list-style: none; /* Remove default bullet points */
+            padding-left: 0;
+            text-align: left; /* Align text to the left */
+        }
+        .romantic-list li {
+            position: relative;
+            padding-left: 1.8rem; /* Space for the heart icon */
+            margin-bottom: 0.75rem; /* Space between list items */
+        }
+        .romantic-list li::before {
+            content: '❤️'; /* Heart emoji as bullet */
+            position: absolute;
+            left: 0;
+            top: 0.1rem; /* Adjust vertical alignment */
+            color: #d18aab; /* Romantic pink color for hearts */
+            font-size: 1.1rem; /* Size of the heart icon */
+        }
+        /* Style for the handwritten section - now Comic Sans */
+        .handwritten-guide-title {
+            font-family: 'Comic Sans MS', cursive; /* Changed to Comic Sans */
+            font-weight: 700; /* Bold for title */
+            font-size: 2.5rem; /* Larger font size for title */
+            color: #8c2f5d; /* Deeper rose/plum */
+        }
+        .handwritten-guide-text {
+            font-family: 'Comic Sans MS', cursive; /* Changed to Comic Sans */
+            font-weight: 400; /* Regular weight for text */
+            font-size: 1.25rem; /* Slightly larger for readability */
+            color: #5d4a66; /* Softer, slightly purplish gray */
+            line-height: 1.8; /* More space for readability */
+        }
+        /* Style for the handwritten questions */
+        .handwritten-question-label {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700; /* Bold for questions */
+            font-size: 1.5rem; /* Larger font size for readability */
+            color: #7b4f7f; /* Plum-purple */
+            line-height: 1.5;
+        }
+
+        /* Styling for the details/summary element */
+        details {
+            background-color: #f8eaf0; /* Light rose blush */
+            border: 1px solid #e6cee0; /* Softer border */
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 1rem;
+            margin-bottom: 2rem; /* Space below the guide box */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        }
+        summary {
+            cursor: pointer;
+            display: flex; /* Allow content to align */
+            flex-wrap: wrap; /* Allow content to wrap if needed */
+            align-items: center; /* Vertically center content */
+            font-family: 'Comic Sans MS', cursive; /* Apply Comic Sans to summary */
+            font-weight: 700; /* Bold for summary text */
+            font-size: 1.5rem; /* Match the original title size, adjust as needed */
+            color: #8c2f5d; /* Deeper rose/plum */
+            padding: 0.5rem 0; /* Padding for click area */
+            line-height: 1.2; /* Adjust line height for summary text */
+            user-select: none; /* Prevent text selection on click */
+        }
+        summary::-webkit-details-marker {
+            display: none; /* Hide default arrow */
+        }
+        summary::after {
+            content: '+'; /* Custom plus icon */
+            margin-left: auto; /* Push to the right */
+            font-size: 2rem;
+            color: #d18aab; /* Pink color for the icon */
+            transition: transform 0.2s;
+        }
+        details[open] summary::after {
+            content: '-'; /* Change to minus when open */
+            transform: rotate(0deg); /* No rotation needed for - */
+        }
+        details[open] summary {
+            margin-bottom: 1rem; /* Space between summary and expanded content when open */
+            padding-bottom: 1rem; /* Add padding at bottom of summary when open */
+            border-bottom: 1px dashed #e0b4c7; /* Subtle separator */
+        }
+        /* Ensure specific list styles within details */
+        details .romantic-list li {
+            font-family: 'Comic Sans MS', cursive; /* Apply Comic Sans to list items */
+            font-size: 1.15rem; /* Slightly smaller than summary but larger than body */
+            color: #5d4a66;
+        }
+        /* Adjustments for text within summary */
+        summary .intro-text-summary { /* Renamed class for clarity */
+            font-size: 1.15rem; /* Smaller font for introductory text in summary */
+            font-weight: 400; /* Regular weight */
+            color: #5d4a66; /* Softer text color */
+            margin-left: 0.5rem; /* Small margin after title */
+        }
+        summary .more-instructions-text {
+            display: block; /* Force this onto a new line for better readability */
+            width: 100%; /* Take full width */
+            font-size: 1rem; /* Even smaller, subtle hint */
+            color: #a0a0a0; /* Lighter color */
+            margin-top: 0.5rem; /* Space above */
+        }
+        /* Style for the new introduction text */
+        .intro-section-text {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700; /* Bold for the introductory text */
+            font-size: 1.8rem; /* Large font size for impact */
+            color: #7b4f7f; /* Plum-purple to match questions */
+            line-height: 1.5;
+            text-align: center;
+            margin-top: 2rem; /* Space above it */
+            margin-bottom: 2rem; /* Space below it */
+            padding: 0 1rem; /* Padding on sides for smaller screens */
+            position: relative; /* For absolute positioning of optional emoji/sticker */
+        }
+        .intro-section-text .animated-sticker {
+            position: absolute;
+            right: 10%; /* Adjust as needed */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px; /* Adjust size as needed */
+            height: 60px;
+            border-radius: 50%; /* Make it round */
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .intro-section-text .animated-sticker {
+                position: static; /* Remove absolute positioning on small screens */
+                display: block;
+                margin: 1rem auto; /* Center it */
+            }
+        }
+
+
+        /* Styles for the Legal Terms Section now open by default */
+        .final-legal-section {
+            background-color: #f8eaf0; /* Light rose blush */
+            border: 1px solid #e6cee0; /* Softer border */
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 1.5rem; /* Slightly more padding */
+            margin-top: 3rem; /* More space before it */
+            margin-bottom: 2rem; /* Space after it, before footer */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        }
+        .final-legal-section h2 { /* Targeting the main title of this section */
+            font-family: 'Comic Sans MS', cursive;
+            font-weight: 700;
+            font-size: 2.2rem; /* Adjusted for an open section */
+            color: #8c2f5d;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .final-legal-section h3 {
+            font-family: "Inter", sans-serif;
+            font-weight: 700;
+            color: #4a2f4c;
+            margin-top: 1.5rem; /* More space for subheadings */
+            margin-bottom: 0.75rem;
+            font-size: 1.15rem; /* Slightly smaller for subheadings */
+        }
+        .final-legal-section p, .final-legal-section ul {
+            font-family: "Inter", sans-serif;
+            font-size: 0.95rem; /* Slightly larger text for better readability */
+            color: #5d4a66;
+            line-height: 1.6;
+        }
+        .final-legal-section ul {
+            padding-left: 1.8rem; /* Indent list items */
+        }
+        .final-legal-section .consent-checkbox-container {
+            margin-top: 2rem; /* More space above checkbox */
+            text-align: center;
+        }
+        .final-legal-section .consent-checkbox-container label {
+            font-family: "Inter", sans-serif;
+            font-size: 1.05rem; /* Slightly larger label */
+            font-weight: 600;
+            color: #334155;
+            display: flex; /* Align checkbox and text */
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .final-legal-section .consent-checkbox-container input[type="checkbox"] {
+            margin-right: 0.75rem; /* Space between checkbox and text */
+        }
+
+        /* Signature Box Styling */
+        .signature-box {
+            background-color: #fcf6f9;
+            border: 1px dashed #d18aab;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+        .signature-box label {
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            color: #4a2f4c;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        .signature-box input[type="text"] {
+            font-family: "Inter", sans-serif;
+            text-align: center;
+            width: 80%;
+            max-width: 300px;
+            padding: 0.5rem;
+            border: 1px solid #e0b4c7;
+            border-radius: 0.375rem;
+            background-color: #fcebeb;
+            color: #4a2f4c;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .signature-box .acknowledgement-text {
+            font-family: "Inter", sans-serif;
+            font-size: 0.9rem;
+            color: #6a4f70;
+            margin-top: 0.75rem;
+        }
+        .dancing-script-signature {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #8c2f5d;
+            margin-top: 1.5rem;
+            border-top: 2px solid #d18aab;
+            padding-top: 0.5rem;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        /* Styling for the main legal details summary and its content */
+        .legal-terms-details {
+            background-color: #f8eaf0;
+            border: 1px solid #e6cee0;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .legal-terms-details summary {
+            font-family: 'Comic Sans MS', cursive;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #8c2f5d;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .legal-terms-details summary::after {
+            content: '+';
+            margin-left: auto;
+            font-size: 2rem;
+            color: #d18aab;
+            transition: transform 0.2s;
+        }
+        .legal-terms-details details[open] summary::after {
+            content: '-';
+            transform: rotate(0deg);
+        }
+        .legal-terms-details details[open] summary {
+            border-bottom: 1px dashed #e0b4c7;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+        }
+        .legal-terms-details .legal-content-area h3 {
+            font-family: "Inter", sans-serif;
+            font-weight: 700;
+            color: #4a2f4c;
+            margin-top: 1rem;
+            font-size: 1.15rem;
+        }
+        .legal-terms-details .legal-content-area p, .legal-terms-details .legal-content-area ul {
+            font-family: "Inter", sans-serif;
+            font-size: 0.9rem;
+            color: #5d4a66;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .legal-terms-details .legal-content-area ul {
+            padding-left: 1.5rem;
+        }
+
+        /* Styling for the new email input container at the bottom */
+        .email-input-bottom-container {
+            padding: 1.5rem; /* Consistent padding with other sections */
+            background-color: #f8eaf0; /* Light rose blush background */
+            border-radius: 0.75rem; /* Rounded corners */
+            border: 1px solid #e6cee0; /* Softer border */
+            margin-top: 2rem; /* Space from the section above */
+            margin-bottom: 2rem; /* Space before the footer */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            text-align: center; /* Center content */
+        }
+        .email-input-bottom-container label {
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            color: #4a2f4c;
+            margin-bottom: 1rem; /* More space below label */
+            display: block; /* Ensure label takes full width */
+            font-size: 1.1rem; /* Slightly larger font for prominence */
+        }
+        .email-input-bottom-container input[type="email"] {
+            width: 80%; /* Adjusted width for centering */
+            max-width: 400px; /* Max width for larger screens */
+            margin: 0 auto; /* Center the input field */
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e0b4c7;
+            background-color: #fcebeb;
+            transition: all 0.2s ease-in-out;
+        }
+        .email-input-bottom-container input[type="email"]:focus {
+            outline: none;
+            border-color: #d18aab;
+            box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2);
+        }
+
+        /* Keyframes for the pulse animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .recollection-animation-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 3rem 0; /* Spacing above and below */
+            min-height: 100px; /* Ensure space for the animation */
+            position: relative;
+        }
+        .recollection-animation-container .heart-pulse {
+            font-size: 5rem; /* Large heart */
+            color: #e04a7a; /* Vibrant pink heart */
+            animation: pulse 2s infinite ease-in-out; /* Apply pulse animation */
+            text-shadow: 0 0 15px rgba(224, 74, 122, 0.5); /* Soft glow */
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8 flex items-center justify-center min-h-screen">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 border border-gray-200">
+        <!-- Header Section -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-800 mb-2">
+                Our Shared Journey: A Relationship Questionnaire ❤️
+            </h1>
+            <p class="text-gray-600 text-lg sm:text-xl">
+                A space to explore our perspectives on important aspects of a long-term relationship.
+            </p>
+        </header>
+
+        <!-- Instructions Section - now an expandable <details> tag -->
+        <details id="gentleGuideDetails">
+            <summary>
+                <h2 class="handwritten-guide-title mb-0 inline">A Gentle Guide:</h2>
+                <span class="handwritten-guide-text more-instructions-text">
+                    Click here for more instructions...
+                </span>
+            </summary>
+            <!-- Moved introductory paragraph inside the details content -->
+            <p class="handwritten-guide-text mt-4">
+                Please take your time to reflect on each question and share your thoughtful insights. There are no right or wrong answers, only perspectives that help us understand each other more deeply as we consider our beautiful future together. Your honest thoughts are truly cherished.
+            </p>
+            <ul class="romantic-list handwritten-guide-text mt-4">
+                <li>To fill out digitally: Open this file in any web browser. Type directly into the text boxes, which will expand automatically as you write more.</li>
+                <li>To save as PDF (after filling digitally): Click the "Download as PDF" button at the bottom of the page. This will open your browser's print dialog, where you can select "Save as PDF" (or a similar option like "Microsoft Print to PDF") as the destination. You can then **send this PDF via email** by attaching the saved file to a new email and sending it to **`iliemagureanu2023@gmail.com`**.</li>
+                <li>To email your answers (as text): After completing the questionnaire, click "I've Completed the Questionnaire" at the bottom of the page. A box with all your answers will appear for review. Copy the text, and then click "Send Email to Elijah" to open your email client. A confirmation will appear before sending.</li>
+                <li>**Important Note:** If your email client doesn't open automatically, or if you're not logged in with the email address you entered above, you can still send your text answers! Just copy all the text from the review box, then manually open your preferred email service (like Gmail, Outlook, etc.), create a new email, and paste the answers into the body. Please send it to: **`iliemagureanu2023@gmail.com`**.</li>
+                <li>To fill out by hand: Print this page directly from your web browser. The text areas will appear as clear spaces for writing.</li>
+                <li class="mt-4 no-print">Once completed, we can discuss your responses together to deepen our mutual understanding.</li>
+            </ul>
+        </details>
+
+        <!-- New Introduction Section -->
+        <section class="intro-section-text">
+            As you embark on this beautiful journey through our questions, remember that each answer is a cherished piece of your heart and mind. This isn't just about finding agreement, but about truly seeing and celebrating the amazing individual you are, and how your unique spirit intertwines with mine as we dream about our wonderful life together. Take your time, let your thoughts flow freely, and know that I'm so excited to read every word.
+            <!-- Placeholder for an animated sticker/GIF - replace with actual URL if desired -->
+            <!-- Example: <img src="https://media.giphy.com/media/v1.gif" alt="Animated Heart" class="animated-sticker no-print"> -->
+        </section>
+
+        <!-- Recollection Animation Section -->
+        <div id="recollectionAnimation" class="recollection-animation-container no-print">
+            <span class="heart-pulse">❤️</span>
+        </div>
+
+        <!-- Questionnaire Section -->
+        <main class="space-y-8">
+            <!-- Question 1: Shared Values and Beliefs -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q1" class="block handwritten-question-label mb-2">
+                    1. How important is it to you that we share similar core values or beliefs, and how do you see that influencing our life together?
+                </label>
+                <textarea id="q1" name="q1" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 2: Embracing a Shared Future -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q2" class="block handwritten-question-label mb-2">
+                    2. What excites you most about building a future and creating new experiences together, as a couple starting fresh?
+                </label>
+                <textarea id="q2" name="q2" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 3: A New Chapter Together -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q3" class="block handwritten-question-label mb-2">
+                    3. If we start a family, how important is it to you that we experience parenthood together for the very first time?
+                </label>
+                <textarea id="q3" name="q3" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 4: Mutual Respect and Partnership -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q4" class="block handwritten-question-label mb-2">
+                    4. How do you view the balance of leadership and partnership in a relationship, and what does 'respect' mean in that dynamic?
+                </label>
+                <textarea id="q4" name="q4" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 5: A Shared Vision for Family Life -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q5" class="block handwritten-question-label mb-2">
+                    5. How do you envision the role of children in our marriage, and what does raising them truly entail for you?
+                </label>
+                <textarea id="q5" name="q5" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 6: The Value of True Friendship -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q6" class="block handwritten-question-label mb-2">
+                    6. How do your friendships enrich your life, and how do you balance your social connections with our relationship?
+                </label>
+                <textarea id="q6" name="q6" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 7: Harmonious Compatibility -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q7" class="block handwritten-question-label mb-2">
+                    7. What creates a lasting feeling of comfort, attraction, and deep compatibility for you in a partner?
+                </label>
+                <textarea id="q7" name="q7" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 8: Seamless Integration and Unity -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q8" class="block handwritten-question-label mb-2">
+                    8. How do you see us building a strong, united front as a couple, especially when facing external challenges or integrating with our families?
+                </label>
+                <textarea id="q8" name="q8" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 9: Intimacy and Respect (Public and Private) -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q9" class="block handwritten-question-label mb-2">
+                    9. How important are both private intimacy and public respect in building a strong and lasting relationship?
+                </label>
+                <textarea id="q9" name="q9" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 10: Cherished Companionship -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q10" class="block handwritten-question-label mb-2">
+                    10. What makes you truly enjoy spending time with a partner, and how do you like to actively nurture that connection?
+                </label>
+                <textarea id="q10" name="q10" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 11: Valuing Shared Time and Presence -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q11" class="block handwritten-question-label mb-2">
+                    11. How do you prefer to spend quality time together, and what makes you feel most connected and present in those moments?
+                </label>
+                <textarea id="q11" name="q11" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 12: Mutual Support and Clear Communication -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q12" class="block handwritten-question-label mb-2">
+                    12. When we face tough decisions or challenges, how do you see us supporting each other and communicating effectively to find solutions?
+                </label>
+                <textarea id="q12" name="q12" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+
+            <!-- Question 13: Commitment to the Partnership -->
+            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                <label for="q13" class="block handwritten-question-label mb-2">
+                    13. What does 'commitment' mean to you in a long-term partnership, and what continuous effort do you believe is needed from both of us for a marriage to truly thrive?
+                </label>
+                <textarea id="q13" name="q13" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+            </div>
+        </main>
+
+        <!-- Final Legal Agreement Section -->
+        <section class="final-legal-section no-print">
+            <h2 class="handwritten-guide-title">Final Agreement & Acknowledgment</h2>
+            <div class="legal-content-area">
+                <!-- Collapsible Legal Terms -->
+                <details id="legalTermsDetails" class="legal-terms-details">
+                    <summary>
+                        <span class="handwritten-guide-text more-instructions-text" style="font-family: 'Inter', sans-serif;">
+                            Click to review Terms & Conditions.
+                        </span>
+                    </summary>
+                    <h3 class="text-xl font-bold mb-2">Terms and Conditions for Use of Questionnaire</h3>
+                    <p class="mb-4 text-sm">
+                        This "Our Shared Journey: A Relationship Questionnaire" (the "Document") is provided solely for the purpose of fostering personal understanding and communication within a private, romantic relationship. By proceeding, you acknowledge and agree to the following terms:
+                    </p>
+                    <ul class="list-disc list-inside mb-4 text-sm">
+                        <li>**Voluntary Participation:** Your participation in completing this Document and sharing your responses is entirely voluntary.</li>
+                        <li>**Intended Use of Information:** Any information, insights, or personal data you share within this Document are intended for the private, personal use of Elijah and yourself for the purpose of mutual relationship understanding and discussion. It is not intended for public disclosure, commercial use, or any purpose beyond your private relationship exploration.</li>
+                        <li>**No Legal Advice:** This Document and its contents do not constitute legal advice, psychological counseling, or any form of professional service. It is designed purely as a tool for personal reflection and communication.</li>
+                        <li>**No Legal Binding:** The completion and submission of this Document, and any terms mentioned herein, do not create a legally binding contract or agreement between you and Elijah, nor does it establish any formal legal obligations or rights beyond the scope of a private personal relationship.</li>
+                        <li>**Disclaimer of Liability:** Elijah disclaims any liability for the use or misuse of the information contained within this Document, or for any outcomes resulting from your participation.</li>
+                    </ul>
+
+                    <h3 class="text-xl font-bold mt-6 mb-2">Non-Disclosure & Copyright Notice</h3>
+                    <p class="mb-4 text-sm">
+                        This Document, including its structure, questions, design, and textual content, is the intellectual property of Elijah and is protected by copyright. By accessing and using this Document, you agree to the following:
+                    </p>
+                    <ul class="list-disc list-inside mb-4 text-sm">
+                        <li>**Confidentiality:** The content of this Document is confidential and intended solely for your personal use as part of your private relationship with Elijah.</li>
+                        <li>**No Reproduction or Distribution:** You agree not to copy, reproduce, distribute, publish, display, perform, modify, create derivative works from, transmit, or in any way exploit any part of this Document without the express prior written consent of Elijah.</li>
+                        <li>**Copyright Infringement:** Any unauthorized reproduction or distribution of this Document may constitute copyright infringement and could lead to legal action.</li>
+                    </ul>
+                </details>
+
+                <!-- Acknowledgment Checkbox and Signature Box (always visible, but content toggled by checkbox) -->
+                <div class="mt-6">
+                    <div class="consent-checkbox-container">
+                        <label for="consentCheckboxFinal" class="flex items-center justify-center cursor-pointer">
+                            <input type="checkbox" id="consentCheckboxFinal" class="form-checkbox h-5 w-5 text-pink-600 rounded mr-3">
+                            I have read, understood, and agree to the above Terms, Consent & Non-Disclosure.
+                        </label>
+                    </div>
+
+                    <!-- Signature/Name Input Box -->
+                    <div id="signatureBox" class="signature-box hidden">
+                        <label for="fullNameInput">
+                            Type Your Full Name to Acknowledge:
+                        </label>
+                        <input type="text" id="fullNameInput" placeholder="Your Full Name">
+                        <p class="acknowledgement-text">
+                            This acts as your digital acknowledgment of agreement.
+                        </p>
+                        <div class="mt-4 pt-4">
+                            <p class="text-xl font-bold text-gray-700 mb-2">Acknowledged by:</p>
+                            <p id="displayedSignature" class="dancing-script-signature"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Email Address Input Container (Moved here) -->
+        <section class="email-input-bottom-container no-print">
+            <label for="senderEmail" class="block text-lg font-medium text-gray-800 mb-2">
+                Your Email Address:
+            </label>
+            <input type="email" id="senderEmail" name="senderEmail" class="w-full" placeholder="name@example.com">
+        </section>
+
+        <footer class="text-center mt-12 p-4 bg-blue-50 rounded-lg border border-blue-200 no-print">
+            <h3 class="text-xl sm:text-2xl font-semibold text-blue-700 mb-3">Thank You for Your Thoughtful Responses!</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Your answers will provide valuable insights for our conversation about a shared future.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
+                <button onclick="showEmailReviewModal()" class="btn-primary">
+                    I've Completed the Questionnaire
+                </button>
+                <button onclick="window.print()" class="btn-primary btn-pdf">
+                    Download as PDF
+                </button>
+            </div>
+            <p class="text-gray-600 text-lg font-semibold italic">With love, Elijah</p>
+        </footer>
+    </div>
+
+    <script>
+        // Store recipient email globally
+        const RECIPIENT_EMAIL = "iliemagureanu2023@gmail.com";
+
+        // Pre-filled answers for each question
+        const prefilledAnswers = {
+            q1: "It's paramount for a unified path, ensuring our foundation aligns with divine principles and shared life goals.",
+            q2: "Excited to build a life founded on our shared faith, creating a new family unit that reflects our values and commitment.",
+            q3: "Highly important. Experiencing parenthood together for the first time is a sacred journey we embark on as one.",
+            q4: "Respect means valuing divine order, where the man leads with love and the woman supports with wisdom, ensuring mutual growth.",
+            q5: "Children are a blessing, to be raised in faith and discipline, understanding the commitment required for their spiritual and moral development.",
+            q6: "True friendships are vital for support, but our primary bond in marriage takes precedence, integrating friends into our shared life harmoniously.",
+            q7: "Deep compatibility arises from shared faith, mutual respect, and a willingness to grow together in love and understanding, accepting imperfections.",
+            q8: "Building a strong front means prioritizing our marital bond above all, always presenting a united stance, especially to external influences.",
+            q9: "Both private intimacy and public respect are cornerstones. Intimacy reflects our deep bond, while public respect honors our partnership and faith.",
+            q10: "I enjoy time together most when we are engaged in purposeful activities, growing in faith, or simply cherishing quiet moments of mutual devotion.",
+            q11: "Quality time means intentional moments of connection, spiritual nourishment, and shared vision planning, focusing on prime, dedicated time together.",
+            q12: "In challenges, support means active listening, prayer, and seeking divine guidance. Communication is clear, honest, and rooted in love and patience.",
+            q13: "Commitment is a lifelong covenant before God, requiring continuous effort, sacrifice, and an unwavering dedication to our shared spiritual and familial journey."
+        };
+
+        // Custom modal function (replaces window.alert for better control)
+        function showCustomModal(contentHtml, modalId = 'customModalOverlay') {
+            const existingModal = document.getElementById(modalId);
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.id = modalId;
+            modalOverlay.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close-btn" onclick="closeCustomModal('${modalId}')">X</button>
+                    ${contentHtml}
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
+
+            const answersTextarea = document.getElementById('emailAnswersTextarea');
+            if (answersTextarea) {
+                answersTextarea.style.height = 'auto';
+                answersTextarea.style.maxHeight = 'calc(90vh - 150px)';
+                answersTextarea.style.overflowY = 'auto';
+                answersTextarea.style.height = (answersTextarea.scrollHeight) + 'px';
+            }
+        }
+
+        function closeCustomModal(modalId = 'customModalOverlay') {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Function to set initial answer in textarea
+        function setInitialAnswer(textarea) {
+            const qId = textarea.id;
+            if (prefilledAnswers[qId]) {
+                textarea.value = prefilledAnswers[qId];
+                textarea.classList.add('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            }
+        }
+
+        // Handle textarea focus (clear pre-filled text)
+        function handleFocus(textarea) {
+            const qId = textarea.id;
+            if (textarea.value === prefilledAnswers[qId]) {
+                textarea.value = '';
+                textarea.classList.remove('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+            }
+        }
+
+        // Handle textarea blur (restore pre-filled text if empty)
+        function handleBlur(textarea) {
+            const qId = textarea.id;
+            if (textarea.value.trim() === '') {
+                textarea.value = prefilledAnswers[qId];
+                textarea.classList.add('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            }
+        }
+
+        // Auto-resize textareas based on content
+        document.addEventListener('input', function (event) {
+            if (event.target.tagName.toLowerCase() === 'textarea' && !event.target.classList.contains('initial-answer')) {
+                event.target.style.height = 'auto';
+                event.target.style.height = (event.target.scrollHeight) + 'px';
+            }
+        });
+
+        // Initialize all textareas with pre-filled answers on load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('textarea').forEach(textarea => {
+                setInitialAnswer(textarea);
+            });
+
+            // Add event listeners for the final legal section
+            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
+            const fullNameInput = document.getElementById('fullNameInput');
+            const signatureBox = document.getElementById('signatureBox');
+            const displayedSignature = document.getElementById('displayedSignature');
+            const legalTermsDetails = document.getElementById('legalTermsDetails');
+
+            if (consentCheckboxFinal && fullNameInput && signatureBox && displayedSignature) {
+                consentCheckboxFinal.addEventListener('change', function() {
+                    if (this.checked) {
+                        signatureBox.classList.remove('hidden');
+                        if (fullNameInput.value.trim() !== '') {
+                            displayedSignature.textContent = fullNameInput.value.trim();
+                        }
+                    } else {
+                        signatureBox.classList.add('hidden');
+                        displayedSignature.textContent = '';
+                        fullNameInput.value = '';
+                    }
+                });
+
+                fullNameInput.addEventListener('input', function() {
+                    displayedSignature.textContent = this.value.trim();
+                });
+            }
+        });
+
+        // Function to validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Step 1: Show review and copy modal (now checks for consent from the FINAL legal section)
+        function showEmailReviewModal() {
+            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
+            const legalTermsDetails = document.getElementById('legalTermsDetails');
+
+            // Check if legal details are open
+            if (!legalTermsDetails.open) {
+                 showCustomModal(`
+                    <p class="text-lg font-semibold mb-4">Review Terms First!</p>
+                    <p class="text-gray-700 mb-6">Please expand "Click to review Terms & Conditions" to review the terms before proceeding.</p>
+                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                `);
+                legalTermsDetails.open = true;
+                return;
+            }
+
+            // Check the checkbox
+            if (!consentCheckboxFinal || !consentCheckboxFinal.checked) {
+                showCustomModal(`
+                    <p class="text-lg font-semibold mb-4">Consent Required!</p>
+                    <p class="text-gray-700 mb-6">Please check the box to agree to the Terms, Consent & Non-Disclosure before proceeding.</p>
+                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                `);
+                consentCheckboxFinal.focus();
+                return;
+            }
+
+            const senderEmail = document.getElementById('senderEmail').value.trim();
+            const acknowledgedName = document.getElementById('fullNameInput').value.trim();
+
+            if (!senderEmail) {
+                showCustomModal(`
+                    <p class="text-lg font-semibold mb-4">Oops! Your Email is Missing</p>
+                    <p class="text-gray-700 mb-6">Please enter your email address to proceed.</p>
+                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                `);
+                return;
+            }
+
+            if (!isValidEmail(senderEmail)) {
+                showCustomModal(`
+                    <p class="text-lg font-semibold mb-4">Invalid Email Format</p>
+                    <p class="text-gray-700 mb-6">Please enter a valid email address (e.g., yourname@example.com) to proceed.</p>
+                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                `);
+                return;
+            }
+
+            if (!acknowledgedName) {
+                showCustomModal(`
+                    <p class="text-lg font-semibold mb-4">Please Acknowledge!</p>
+                    <p class="text-gray-700 mb-6">Kindly type your full name in the acknowledgment section to confirm your consent.</p>
+                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                `);
+                document.getElementById('fullNameInput').focus();
+                return;
+            }
+
+
+            let answersContent = `Sender Email: ${senderEmail}\n`;
+            if (acknowledgedName) {
+                answersContent += `Acknowledged by: ${acknowledgedName}\n\n`;
+            } else {
+                answersContent += `\n`;
+            }
+
+            answersContent += `Relationship Questionnaire Answers:\n\n`;
+            document.querySelectorAll('main div').forEach((questionDiv) => {
+                const questionLabel = questionDiv.querySelector('label').innerText.trim();
+                const answerTextarea = questionDiv.querySelector('textarea');
+                let answer = answerTextarea ? answerTextarea.value.trim() : '';
+
+                // Only include the answer if it's not the pre-filled text
+                if (answer === prefilledAnswers[answerTextarea.id]) {
+                    answer = ''; // Treat as empty if it's still the pre-filled text
+                }
+                answersContent += `${questionLabel}\n${answer}\n\n`;
+            });
+
+            // Store the answersContent temporarily for the next step
+            window.tempAnswersContent = answersContent;
+
+            const reviewModalHtml = `
+                <p class="text-lg font-semibold text-center mb-4">Review Your Answers Below:</p>
+                <textarea id="emailAnswersTextarea" readonly>${answersContent}</textarea>
+                <button class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition mt-4" onclick="copyAnswersToClipboard()">
+                    Copy Answers to Clipboard
+                </button>
+                <button class="btn-primary btn-heart mt-4" onclick="showEmailConfirmationModal()">
+                    Send Email to Elijah <span class="heart-icon">❤️</span>
+                </button>
+            `;
+            showCustomModal(reviewModalHtml);
+        }
+
+        // Function to copy answers to clipboard
+        function copyAnswersToClipboard() {
+            const answersTextarea = document.getElementById('emailAnswersTextarea');
+            if (answersTextarea) {
+                answersTextarea.select();
+                document.execCommand('copy');
+                const copyButton = answersTextarea.nextElementSibling;
+                if (copyButton && copyButton.innerText === 'Copy Answers to Clipboard') {
+                    copyButton.innerText = 'Copied!';
+                    setTimeout(() => {
+                        copyButton.innerText = 'Copy Answers to Clipboard';
+                    }, 2000);
+                }
+            }
+        }
+
+        // Step 2: Show email confirmation modal
+        function showEmailConfirmationModal() {
+            closeCustomModal();
+
+            const confirmationModalHtml = `
+                <p class="text-lg font-semibold mb-4">Are you sure you want to send your answers via email?</p>
+                <div class="flex justify-center gap-4 mt-6">
+                    <button class="btn-primary bg-green-600 hover:bg-green-700" onclick="sendEmail()">
+                        Yes, Send Email
+                    </button>
+                    <button class="btn-primary bg-gray-500 hover:bg-gray-600" onclick="closeCustomModal()">
+                        Cancel
+                    </button>
+                </div>
+            `;
+            showCustomModal(confirmationModalHtml);
+        }
+
+        // Final step: Trigger email (called after confirmation)
+        function sendEmail() {
+            closeCustomModal();
+
+            const senderEmail = document.getElementById('senderEmail').value.trim();
+            const subject = encodeURIComponent(`Questionnaire Answers from ${senderEmail}`);
+            const mailtoLink = `mailto:${RECIPIENT_EMAIL}?subject=${subject}&body=${encodeURIComponent(window.tempAnswersContent)}`;
+
+            window.open(mailtoLink, '_blank');
+
+            showCustomModal(`
+                <p class="text-lg font-semibold mb-4">Email Client Opened!</p>
+                <p class="text-gray-700 mb-6">
+                    Your email client should now be open with your answers. Please ensure the answers are pasted into the email body before sending!
+                </p>
+                <button class="btn-primary" onclick="closeCustomModal()">Close</button>
+            `);
+        }
+    </script>
+</body>
+</html>
