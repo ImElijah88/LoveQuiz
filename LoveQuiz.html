@@ -306,9 +306,9 @@
             transform: rotate(0deg); /* No rotation needed for - */
         }
         details[open] summary {
-            margin-bottom: 1rem; /* Space between summary and expanded content when open */
-            padding-bottom: 1rem; /* Add padding at bottom of summary when open */
-            border-bottom: 1px dashed #e0b4c7; /* Subtle separator */
+            border-bottom: 1px dashed #e0b4c7;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
         }
         /* Ensure specific list styles within details */
         details .romantic-list li {
@@ -493,7 +493,7 @@
             content: '-';
             transform: rotate(0deg);
         }
-        .legal-terms-details details[open] summary {
+        details[open] summary {
             border-bottom: 1px dashed #e0b4c7;
             margin-bottom: 1rem;
             padding-bottom: 1rem;
@@ -545,10 +545,38 @@
             background-color: #fcebeb;
             transition: all 0.2s ease-in-out;
         }
-        .email-input-bottom-container input[type="email"]:focus {
+        input[type="email"]:focus {
             outline: none;
             border-color: #d18aab;
             box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2);
+        }
+
+        /* Style for the new direct submission box */
+        .direct-submit-box {
+            background-color: #fffbeb; /* Very light yellow */
+            color: #854d0c; /* Darker yellow/orange text */
+            border: 1px solid #fde68a; /* Soft yellow border */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 3rem; /* Space above */
+            margin-bottom: 2rem; /* Space below */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .direct-submit-box .message-text {
+            font-family: "Inter", sans-serif;
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .direct-submit-box .btn-primary { /* Style the button within the yellow box */
+            background-color: #f59e0b; /* A brighter yellow/orange for the button */
+            color: white;
+            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+        }
+        .direct-submit-box .btn-primary:hover {
+            background-color: #d97706; /* Darker on hover */
         }
 
         /* Keyframes for the pulse animation */
@@ -608,10 +636,8 @@
             </p>
             <ul class="romantic-list handwritten-guide-text mt-4">
                 <li>To fill out digitally: Open this file in any web browser. Type directly into the text boxes, which will expand automatically as you write more.</li>
-                <li>To save as PDF (after filling digitally): Click the "Download as PDF" button at the bottom of the page. This will open your browser's print dialog, where you can select "Save as PDF" (or a similar option like "Microsoft Print to PDF") as the destination. You can then **send this PDF via email** by attaching the saved file to a new email and sending it to **`iliemagureanu2023@gmail.com`**.</li>
-                <li>To email your answers (as text): After completing the questionnaire, click "I've Completed the Questionnaire" at the bottom of the page. A box with all your answers will appear for review. Copy the text, and then click "Send Email to Elijah" to open your email client. A confirmation will appear before sending.</li>
-                <li>**Important Note:** If your email client doesn't open automatically, or if you're not logged in with the email address you entered above, you can still send your text answers! Just copy all the text from the review box, then manually open your preferred email service (like Gmail, Outlook, etc.), create a new email, and paste the answers into the body. Please send it to: **`iliemagureanu2023@gmail.com`**.</li>
-                <li>To fill out by hand: Print this page directly from your web browser. The text areas will appear as clear spaces for writing.</li>
+                <li>To save as PDF: Click the "Download as PDF" button at the bottom of the page. This will open your browser's print dialog, where you can select "Save as PDF" (or a similar option like "Microsoft Print to PDF") as the destination.</li>
+                <li>To send your answers directly: Fill out the questionnaire, then use the "Send Answers Directly to Elijah" button below for seamless submission.</li>
                 <li class="mt-4 no-print">Once completed, we can discuss your responses together to deepen our mutual understanding.</li>
             </ul>
         </details>
@@ -628,202 +654,211 @@
             <span class="heart-pulse">❤️</span>
         </div>
 
-        <!-- Questionnaire Section -->
-        <main class="space-y-8">
-            <!-- Question 1: Shared Values and Beliefs -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q1" class="block handwritten-question-label mb-2">
-                    1. How important is it to you that we share similar core values or beliefs, and how do you see that influencing our life together?
-                </label>
-                <textarea id="q1" name="q1" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+        <!-- Start of the FORM tag for Formspree submission -->
+        <form id="loveQuizForm" action="https://formspree.io/f/mqabgreo" method="POST">
+            <!-- Questionnaire Section -->
+            <main class="space-y-8">
+                <!-- Question 1: Shared Values and Beliefs -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q1" class="block handwritten-question-label mb-2">
+                        1. How important is it to you that we share similar core values or beliefs, and how do you see that influencing our life together?
+                    </label>
+                    <textarea id="q1" name="q1_values" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 2: Embracing a Shared Future -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q2" class="block handwritten-question-label mb-2">
-                    2. What excites you most about building a future and creating new experiences together, as a couple starting fresh?
-                </label>
-                <textarea id="q2" name="q2" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 2: Embracing a Shared Future -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q2" class="block handwritten-question-label mb-2">
+                        2. What excites you most about building a future and creating new experiences together, as a couple starting fresh?
+                    </label>
+                    <textarea id="q2" name="q2_future" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 3: A New Chapter Together -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q3" class="block handwritten-question-label mb-2">
-                    3. If we start a family, how important is it to you that we experience parenthood together for the very first time?
-                </label>
-                <textarea id="q3" name="q3" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 3: A New Chapter Together -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q3" class="block handwritten-question-label mb-2">
+                        3. If we start a family, how important is it to you that we experience parenthood together for the very first time?
+                    </label>
+                    <textarea id="q3" name="q3_parenthood" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 4: Mutual Respect and Partnership -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q4" class="block handwritten-question-label mb-2">
-                    4. How do you view the balance of leadership and partnership in a relationship, and what does 'respect' mean in that dynamic?
-                </label>
-                <textarea id="q4" name="q4" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 4: Mutual Respect and Partnership -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q4" class="block handwritten-question-label mb-2">
+                        4. How do you view the balance of leadership and partnership in a relationship, and what does 'respect' mean in that dynamic?
+                    </label>
+                    <textarea id="q4" name="q4_leadership_respect" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 5: A Shared Vision for Family Life -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q5" class="block handwritten-question-label mb-2">
-                    5. How do you envision the role of children in our marriage, and what does raising them truly entail for you?
-                </label>
-                <textarea id="q5" name="q5" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 5: A Shared Vision for Family Life -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q5" class="block handwritten-question-label mb-2">
+                        5. How do you envision the role of children in our marriage, and what does raising them truly entail for you?
+                    </label>
+                    <textarea id="q5" name="q5_children_role" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 6: The Value of True Friendship -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q6" class="block handwritten-question-label mb-2">
-                    6. How do your friendships enrich your life, and how do you balance your social connections with our relationship?
-                </label>
-                <textarea id="q6" name="q6" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 6: The Value of True Friendship -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q6" class="block handwritten-question-label mb-2">
+                        6. How do your friendships enrich your life, and how do you balance your social connections with our relationship?
+                    </label>
+                    <textarea id="q6" name="q6_friendships" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 7: Harmonious Compatibility -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q7" class="block handwritten-question-label mb-2">
-                    7. What creates a lasting feeling of comfort, attraction, and deep compatibility for you in a partner?
-                </label>
-                <textarea id="q7" name="q7" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 7: Harmonious Compatibility -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q7" class="block handwritten-question-label mb-2">
+                        7. What creates a lasting feeling of comfort, attraction, and deep compatibility for you in a partner?
+                    </label>
+                    <textarea id="q7" name="q7_compatibility" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 8: Seamless Integration and Unity -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q8" class="block handwritten-question-label mb-2">
-                    8. How do you see us building a strong, united front as a couple, especially when facing external challenges or integrating with our families?
-                </label>
-                <textarea id="q8" name="q8" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 8: Seamless Integration and Unity -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q8" class="block handwritten-question-label mb-2">
+                        8. How do you see us building a strong, united front as a couple, especially when facing external challenges or integrating with our families?
+                    </label>
+                    <textarea id="q8" name="q8_united_front" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 9: Intimacy and Respect (Public and Private) -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q9" class="block handwritten-question-label mb-2">
-                    9. How important are both private intimacy and public respect in building a strong and lasting relationship?
-                </label>
-                <textarea id="q9" name="q9" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 9: Intimacy and Respect (Public and Private) -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q9" class="block handwritten-question-label mb-2">
+                        9. How important are both private intimacy and public respect in building a strong and lasting relationship?
+                    </label>
+                    <textarea id="q9" name="q9_intimacy_respect" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 10: Cherished Companionship -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q10" class="block handwritten-question-label mb-2">
-                    10. What makes you truly enjoy spending time with a partner, and how do you like to actively nurture that connection?
-                </label>
-                <textarea id="q10" name="q10" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 10: Cherished Companionship -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q10" class="block handwritten-question-label mb-2">
+                        10. What makes you truly enjoy spending time with a partner, and how do you like to actively nurture that connection?
+                    </label>
+                    <textarea id="q10" name="q10_companionship" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 11: Valuing Shared Time and Presence -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q11" class="block handwritten-question-label mb-2">
-                    11. How do you prefer to spend quality time together, and what makes you feel most connected and present in those moments?
-                </label>
-                <textarea id="q11" name="q11" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 11: Valuing Shared Time and Presence -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q11" class="block handwritten-question-label mb-2">
+                        11. How do you prefer to spend quality time together, and what makes you feel most connected and present in those moments?
+                    </label>
+                    <textarea id="q11" name="q11_quality_time" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 12: Mutual Support and Clear Communication -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q12" class="block handwritten-question-label mb-2">
-                    12. When we face tough decisions or challenges, how do you see us supporting each other and communicating effectively to find solutions?
-                </label>
-                <textarea id="q12" name="q12" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
+                <!-- Question 12: Mutual Support and Clear Communication -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q12" class="block handwritten-question-label mb-2">
+                        12. When we face tough decisions or challenges, how do you see us supporting each other and communicating effectively to find solutions?
+                    </label>
+                    <textarea id="q12" name="q12_support_comm" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
 
-            <!-- Question 13: Commitment to the Partnership -->
-            <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
-                <label for="q13" class="block handwritten-question-label mb-2">
-                    13. What does 'commitment' mean to you in a long-term partnership, and what continuous effort do you believe is needed from both of us for a marriage to truly thrive?
-                </label>
-                <textarea id="q13" name="q13" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
-            </div>
-        </main>
+                <!-- Question 13: Commitment to the Partnership -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q13" class="block handwritten-question-label mb-2">
+                        13. What does 'commitment' mean to you in a long-term partnership, and what continuous effort do you believe is needed from both of us for a marriage to truly thrive?
+                    </label>
+                    <textarea id="q13" name="q13_commitment" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+            </main>
 
-        <!-- Final Legal Agreement Section -->
-        <section class="final-legal-section">
-            <h2 class="handwritten-guide-title">Final Agreement & Acknowledgment</h2>
-            <div class="legal-content-area">
-                <!-- Collapsible Legal Terms -->
-                <details id="legalTermsDetails" class="legal-terms-details">
-                    <summary>
-                        <span class="handwritten-guide-text more-instructions-text" style="font-family: 'Inter', sans-serif;">
-                            Click to review Terms & Conditions.
-                        </span>
-                    </summary>
-                    <h3 class="text-xl font-bold mb-2">Terms and Conditions for Use of Questionnaire</h3>
-                    <p class="mb-4 text-sm">
-                        This "Our Shared Journey: A Relationship Questionnaire" (the "Document") is provided solely for the purpose of fostering personal understanding and communication within a private, romantic relationship. By proceeding, you acknowledge and agree to the following terms:
-                    </p>
-                    <ul class="list-disc list-inside mb-4 text-sm">
-                        <li>**Voluntary Participation:** Your participation in completing this Document and sharing your responses is entirely voluntary.</li>
-                        <li>**Intended Use of Information:** Any information, insights, or personal data you share within this Document are intended for the private, personal use of Elijah and yourself for the purpose of mutual relationship understanding and discussion. It is not intended for public disclosure, commercial use, or any purpose beyond your private relationship exploration.</li>
-                        <li>**No Legal Advice:** This Document and its contents do not constitute legal advice, psychological counseling, or any form of professional service. It is designed purely as a tool for personal reflection and communication.</li>
-                        <li>**No Legal Binding:** The completion and submission of this Document, and any terms mentioned herein, do not create a legally binding contract or agreement between you and Elijah, nor does it establish any formal legal obligations or rights beyond the scope of a private personal relationship.</li>
-                        <li>**Disclaimer of Liability:** Elijah disclaims any liability for the use or misuse of the information contained within this Document, or for any outcomes resulting from your participation.</li>
-                    </ul>
-
-                    <h3 class="text-xl font-bold mt-6 mb-2">Non-Disclosure & Copyright Notice</h3>
-                    <p class="mb-4 text-sm">
-                        This Document, including its structure, questions, design, and textual content, is the intellectual property of Elijah and is protected by copyright. By accessing and using this Document, you agree to the following:
-                    </p>
-                    <ul class="list-disc list-inside mb-4 text-sm">
-                        <li>**Confidentiality:** The content of this Document is confidential and intended solely for your personal use as part of your private relationship with Elijah.</li>
-                        <li>**No Reproduction or Distribution:** You agree not to copy, reproduce, distribute, publish, display, perform, modify, create derivative works from, transmit, or in any way exploit any part of this Document without the express prior written consent of Elijah.</li>
-                        <li>**Copyright Infringement:** Any unauthorized reproduction or distribution of this Document may constitute copyright infringement and could lead to legal action.</li>
-                    </ul>
-                </details>
-
-                <!-- Acknowledgment Checkbox and Signature Box (always visible, but content toggled by checkbox) -->
-                <div class="mt-6">
-                    <div class="consent-checkbox-container">
-                        <label for="consentCheckboxFinal" class="flex items-center justify-center cursor-pointer">
-                            <input type="checkbox" id="consentCheckboxFinal" class="form-checkbox h-5 w-5 text-pink-600 rounded mr-3">
-                            I have read, understood, and agree to the above Terms, Consent & Non-Disclosure.
-                        </label>
-                    </div>
-
-                    <!-- Signature/Name Input Box -->
-                    <div id="signatureBox" class="signature-box hidden">
-                        <label for="fullNameInput">
-                            Type Your Full Name to Acknowledge:
-                        </label>
-                        <input type="text" id="fullNameInput" placeholder="Your Full Name">
-                        <p class="acknowledgement-text">
-                            This acts as your digital acknowledgment of agreement.
+            <!-- Final Legal Agreement Section -->
+            <section class="final-legal-section">
+                <h2 class="handwritten-guide-title">Final Agreement & Acknowledgment</h2>
+                <div class="legal-content-area">
+                    <!-- Collapsible Legal Terms -->
+                    <details id="legalTermsDetails" class="legal-terms-details">
+                        <summary>
+                            <span class="handwritten-guide-text more-instructions-text" style="font-family: 'Inter', sans-serif;">
+                                Click to review Terms & Conditions.
+                            </span>
+                        </summary>
+                        <h3 class="text-xl font-bold mb-2">Terms and Conditions for Use of Questionnaire</h3>
+                        <p class="mb-4 text-sm">
+                            This "Our Shared Journey: A Relationship Questionnaire" (the "Document") is provided solely for the purpose of fostering personal understanding and communication within a private, romantic relationship. By proceeding, you acknowledge and agree to the following terms:
                         </p>
-                        <div class="mt-4 pt-4">
-                            <p class="text-xl font-bold text-gray-700 mb-2">Acknowledged by:</p>
-                            <p id="displayedSignature" class="dancing-script-signature"></p>
+                        <ul class="list-disc list-inside mb-4 text-sm">
+                            <li>**Voluntary Participation:** Your participation in completing this Document and sharing your responses is entirely voluntary.</li>
+                            <li>**Intended Use of Information:** Any information, insights, or personal data you share within this Document are intended for the private, personal use of Elijah and yourself for the purpose of mutual relationship understanding and discussion. It is not intended for public disclosure, commercial use, or any purpose beyond your private relationship exploration.</li>
+                            <li>**No Legal Advice:** This Document and its contents do not constitute legal advice, psychological counseling, or any form of professional service. It is designed purely as a tool for personal reflection and communication.</li>
+                            <li>**No Legal Binding:** The completion and submission of this Document, and any terms mentioned herein, do not create a legally binding contract or agreement between you and Elijah, nor does it establish any formal legal obligations or rights beyond the scope of a private personal relationship.</li>
+                            <li>**Disclaimer of Liability:** Elijah disclaims any liability for the use or misuse of the information contained within this Document, or for any outcomes resulting from your participation.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold mt-6 mb-2">Non-Disclosure & Copyright Notice</h3>
+                        <p class="mb-4 text-sm">
+                            This Document, including its structure, questions, design, and textual content, is the intellectual property of Elijah and is protected by copyright. By accessing and using this Document, you agree to the following:
+                        </p>
+                        <ul class="list-disc list-inside mb-4 text-sm">
+                            <li>**Confidentiality:** The content of this Document is confidential and intended solely for your personal use as part of your private relationship with Elijah.</li>
+                            <li>**No Reproduction or Distribution:** You agree not to copy, reproduce, distribute, publish, display, perform, modify, create derivative works from, transmit, or in any way exploit any part of this Document without the express prior written consent of Elijah.</li>
+                            <li>**Copyright Infringement:** Any unauthorized reproduction or distribution of this Document may constitute copyright infringement and could lead to legal action.</li>
+                        </ul>
+                    </details>
+
+                    <!-- Acknowledgment Checkbox and Signature Box (always visible, but content toggled by checkbox) -->
+                    <div class="mt-6">
+                        <div class="consent-checkbox-container">
+                            <label for="consentCheckboxFinal" class="flex items-center justify-center cursor-pointer">
+                                <input type="checkbox" id="consentCheckboxFinal" name="consent_agreed" value="Yes" class="form-checkbox h-5 w-5 text-pink-600 rounded mr-3">
+                                I have read, understood, and agree to the above Terms, Consent & Non-Disclosure.
+                            </label>
+                        </div>
+
+                        <!-- Signature/Name Input Box -->
+                        <div id="signatureBox" class="signature-box hidden">
+                            <label for="fullNameInput">
+                                Type Your Full Name to Acknowledge:
+                            </label>
+                            <input type="text" id="fullNameInput" name="acknowledged_by" placeholder="Your Full Name">
+                            <p class="acknowledgement-text">
+                                This acts as your digital acknowledgment of agreement.
+                            </p>
+                            <div class="mt-4 pt-4">
+                                <p id="displayedSignature" class="dancing-script-signature"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- Email Address Input Container (Moved here) -->
-        <section class="email-input-bottom-container no-print">
-            <label for="senderEmail" class="block text-lg font-medium text-gray-800 mb-2">
-                Your Email Address:
-            </label>
-            <input type="email" id="senderEmail" name="senderEmail" class="w-full" placeholder="name@example.com">
-        </section>
+            <!-- Email Address Input Container -->
+            <section class="email-input-bottom-container no-print">
+                <label for="senderEmail" class="block text-lg font-medium text-gray-800 mb-2">
+                    Your Email Address:
+                </label>
+                <input type="email" id="senderEmail" name="_replyto" class="w-full" placeholder="name@example.com">
+            </section>
 
-        <footer class="text-center mt-12 p-4 bg-blue-50 rounded-lg border border-blue-200 no-print">
-            <h3 class="text-xl sm:text-2xl font-semibold text-blue-700 mb-3">Thank You for Your Thoughtful Responses!</h3>
-            <p class="text-gray-700 leading-relaxed mb-4">
-                Your answers will provide valuable insights for our conversation about a shared future.
-            </p>
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
-                <button onclick="showEmailReviewModal()" class="btn-primary">
-                    I've Completed the Questionnaire
+            <!-- NEW: Direct Submission Box -->
+            <div class="direct-submit-box no-print">
+                <p class="message-text">
+                    Thank you, my dear Avneet! I wanted to make this truly simple for you. When you feel ready, just click the button below, and your answers will come straight to my inbox. It's a secure, effortless way for us to grow even closer as we continue building our future. I'm so excited for our next conversation!
+                </p>
+                <!-- This button will now submit the form directly to Formspree -->
+                <button type="submit" class="btn-primary" id="submitFormButton">
+                    Send Answers Directly to Elijah ❤️
                 </button>
+            </div>
+
+            <!-- Footer (now only contains PDF button) -->
+            <footer class="text-center mt-12 p-4 bg-blue-50 rounded-lg border border-blue-200 no-print">
+                <h3 class="text-xl sm:text-2xl font-semibold text-blue-700 mb-3">Thank You for Your Thoughtful Responses!</h3>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    Your answers will provide valuable insights for our conversation about a shared future.
+                </p>
                 <button onclick="window.print()" class="btn-primary btn-pdf">
                     Download as PDF
                 </button>
-            </div>
-            <p class="text-gray-600 text-lg font-semibold italic">With love, Elijah</p>
-        </footer>
+                <p class="text-gray-600 text-lg font-semibold italic mt-4">With love, Elijah</p>
+            </footer>
+        </form> <!-- End of the FORM tag -->
     </div>
 
     <script>
         // Store recipient email globally
-        const RECIPIENT_EMAIL = "iliemagureanu2023@gmail.com";
+        const RECIPIENT_EMAIL = "iliemagureanu2023@gmail.com"; // This is still used by Formspree internally for the reply-to header
 
         // Pre-filled answers for each question
         const prefilledAnswers = {
@@ -835,7 +870,7 @@
             q6: "True friendships are vital for support, but our primary bond in marriage takes precedence, integrating friends into our shared life harmoniously.",
             q7: "Deep compatibility arises from shared faith, mutual respect, and a willingness to grow together in love and understanding, accepting imperfections.",
             q8: "Building a strong front means prioritizing our marital bond above all, always presenting a united stance, especially to external influences.",
-            q9: "Both private intimacy and public respect are cornerstones. Intimacy reflects our deep bond, while public respect honors our partnership and faith.",
+            q9: "How important are both private intimacy and public respect in building a strong and lasting relationship?",
             q10: "I enjoy time together most when we are engaged in purposeful activities, growing in faith, or simply cherishing quiet moments of mutual devotion.",
             q11: "Quality time means intentional moments of connection, spiritual nourishment, and shared vision planning, focusing on prime, dedicated time together.",
             q12: "In challenges, support means active listening, prayer, and seeking divine guidance. Communication is clear, honest, and rooted in love and patience.",
@@ -851,296 +886,4 @@
 
             const modalOverlay = document.createElement('div');
             modalOverlay.className = 'modal-overlay';
-            modalOverlay.id = modalId;
-            modalOverlay.innerHTML = `
-                <div class="modal-content">
-                    <button class="modal-close-btn" onclick="closeCustomModal('${modalId}')">X</button>
-                    ${contentHtml}
-                </div>
-            `;
-            document.body.appendChild(modalOverlay);
-
-            const answersTextarea = document.getElementById('emailAnswersTextarea');
-            if (answersTextarea) {
-                answersTextarea.style.height = 'auto';
-                answersTextarea.style.maxHeight = 'calc(90vh - 150px)';
-                answersTextarea.style.overflowY = 'auto';
-                answersTextarea.style.height = (answersTextarea.scrollHeight) + 'px';
-            }
-        }
-
-        function closeCustomModal(modalId = 'customModalOverlay') {
-            const modal = document.getElementById(modalId);
-            if (modal) {
-                modal.remove();
-            }
-        }
-
-        // Function to set initial answer in textarea
-        function setInitialAnswer(textarea) {
-            const qId = textarea.id;
-            if (prefilledAnswers[qId]) {
-                textarea.value = prefilledAnswers[qId];
-                textarea.classList.add('initial-answer');
-                textarea.style.height = 'auto'; // Recalculate height
-                textarea.style.height = (textarea.scrollHeight) + 'px';
-            }
-        }
-
-        // Handle textarea focus (clear pre-filled text)
-        function handleFocus(textarea) {
-            const qId = textarea.id;
-            if (textarea.value === prefilledAnswers[qId]) {
-                textarea.value = '';
-                textarea.classList.remove('initial-answer');
-                textarea.style.height = 'auto'; // Recalculate height
-            }
-        }
-
-        // Handle textarea blur (restore pre-filled text if empty)
-        function handleBlur(textarea) {
-            const qId = textarea.id;
-            if (textarea.value.trim() === '') {
-                textarea.value = prefilledAnswers[qId];
-                textarea.classList.add('initial-answer');
-                textarea.style.height = 'auto'; // Recalculate height
-                textarea.style.height = (textarea.scrollHeight) + 'px';
-            }
-        }
-
-        // Auto-resize textareas based on content
-        document.addEventListener('input', function (event) {
-            if (event.target.tagName.toLowerCase() === 'textarea' && !event.target.classList.contains('initial-answer')) {
-                event.target.style.height = 'auto';
-                event.target.style.height = (event.target.scrollHeight) + 'px';
-            }
-        });
-
-        // Initialize all textareas with pre-filled answers on load
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('textarea').forEach(textarea => {
-                setInitialAnswer(textarea);
-            });
-
-            // Add event listeners for the final legal section
-            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
-            const fullNameInput = document.getElementById('fullNameInput');
-            const signatureBox = document.getElementById('signatureBox');
-            const displayedSignature = document.getElementById('displayedSignature');
-            const legalTermsDetails = document.getElementById('legalTermsDetails');
-
-            if (consentCheckboxFinal && fullNameInput && signatureBox && displayedSignature) {
-                consentCheckboxFinal.addEventListener('change', function() {
-                    if (this.checked) {
-                        signatureBox.classList.remove('hidden');
-                        if (fullNameInput.value.trim() !== '') {
-                            displayedSignature.textContent = fullNameInput.value.trim();
-                        }
-                    } else {
-                        signatureBox.classList.add('hidden');
-                        displayedSignature.textContent = '';
-                        fullNameInput.value = '';
-                    }
-                });
-
-                fullNameInput.addEventListener('input', function() {
-                    displayedSignature.textContent = this.value.trim();
-                });
-            }
-        });
-
-        // Function to validate email format
-        function isValidEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        // Step 1: Show review and copy modal (now checks for consent from the FINAL legal section)
-        function showEmailReviewModal() {
-            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
-            const legalTermsDetails = document.getElementById('legalTermsDetails');
-
-            // Check if legal terms are open and acknowledged
-            if (!legalTermsDetails.open) {
-                 showCustomModal(`
-                    <p class="text-lg font-semibold mb-4">Review Terms First!</p>
-                    <p class="text-gray-700 mb-6">Please expand "Click to review Terms & Conditions" to review the terms before proceeding.</p>
-                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
-                `);
-                legalTermsDetails.open = true;
-                return;
-            }
-
-            // Check the checkbox
-            if (!consentCheckboxFinal || !consentCheckboxFinal.checked) {
-                showCustomModal(`
-                    <p class="text-lg font-semibold mb-4">Consent Required!</p>
-                    <p class="text-gray-700 mb-6">Please check the box to agree to the Terms, Consent & Non-Disclosure before proceeding.</p>
-                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
-                `);
-                consentCheckboxFinal.focus();
-                return;
-            }
-
-            const senderEmail = document.getElementById('senderEmail').value.trim();
-            const acknowledgedName = document.getElementById('fullNameInput').value.trim();
-
-            if (!senderEmail) {
-                showCustomModal(`
-                    <p class="text-lg font-semibold mb-4">Oops! Your Email is Missing</p>
-                    <p class="text-gray-700 mb-6">Please enter your email address to proceed.</p>
-                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
-                `);
-                return;
-            }
-
-            if (!isValidEmail(senderEmail)) {
-                showCustomModal(`
-                    <p class="text-lg font-semibold mb-4">Invalid Email Format</p>
-                    <p class="text-gray-700 mb-6">Please enter a valid email address (e.g., yourname@example.com) to proceed.</p>
-                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
-                `);
-                return;
-            }
-
-            if (!acknowledgedName) {
-                showCustomModal(`
-                    <p class="text-lg font-semibold mb-4">Please Acknowledge!</p>
-                    <p class="text-gray-700 mb-6">Kindly type your full name in the acknowledgment section to confirm your consent.</p>
-                    <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
-                `);
-                document.getElementById('fullNameInput').focus();
-                return;
-            }
-
-
-            let answersContent = `Sender Email: ${senderEmail}\n`;
-            if (acknowledgedName) {
-                answersContent += `Acknowledged by: ${acknowledgedName}\n\n`;
-            } else {
-                answersContent += `\n`;
-            }
-
-            answersContent += `--- Relationship Questionnaire Answers ---\n\n`;
-            document.querySelectorAll('main div').forEach((questionDiv) => {
-                const questionLabel = questionDiv.querySelector('label').innerText.trim();
-                const answerTextarea = questionDiv.querySelector('textarea');
-                let answer = answerTextarea ? answerTextarea.value.trim() : '';
-
-                // Only include the answer if it's not the pre-filled text
-                if (answer === prefilledAnswers[answerTextarea.id]) {
-                    answer = ''; // Treat as empty if it's still the pre-filled text
-                }
-                answersContent += `${questionLabel}\n${answer}\n\n`;
-            });
-
-            // --- Add Legal Consent & Acknowledgment to Email Body ---
-            const legalSection = document.querySelector('.final-legal-section');
-            if (legalSection) {
-                answersContent += `\n\n--- Legal Consent & Acknowledgment ---\n\n`;
-
-                // Extract all text content from the details, including hidden parts
-                const legalTermsDetailsContent = document.getElementById('legalTermsDetails');
-                if (legalTermsDetailsContent) {
-                    // Temporarily force open to get all text, then revert
-                    const wasOpen = legalTermsDetailsContent.open;
-                    legalTermsDetailsContent.open = true;
-                    answersContent += `\n\nTerms and Conditions:\n\n`;
-                    // Loop through children to extract text in a readable way
-                    Array.from(legalTermsDetailsContent.children).forEach(child => {
-                        if (child.tagName === 'SUMMARY') {
-                            // Skip summary itself or just get its text if useful
-                            // answersContent += child.textContent.trim() + '\n\n';
-                        } else {
-                            answersContent += child.textContent.trim() + '\n\n';
-                        }
-                    });
-                    legalTermsDetailsContent.open = wasOpen; // Revert to original state
-
-                }
-                
-                // Get the consent checkbox text
-                const consentLabel = document.querySelector('#consentCheckboxFinal').nextElementSibling;
-                if (consentLabel) {
-                    answersContent += `Consent: ${consentLabel.textContent.trim()} - ` + (consentCheckboxFinal.checked ? 'Agreed' : 'Not Agreed') + '\n\n';
-                }
-
-                // Get the typed full name (acknowledgment)
-                const fullNameInputText = document.getElementById('fullNameInput').value.trim();
-                if (fullNameInputText) {
-                    answersContent += `Acknowledged by (Typed Name): ${fullNameInputText}\n\n`;
-                }
-            }
-
-
-            // Store the answersContent temporarily for the next step
-            window.tempAnswersContent = answersContent;
-
-            const reviewModalHtml = `
-                <p class="text-lg font-semibold text-center mb-4">Review Your Answers Below:</p>
-                <textarea id="emailAnswersTextarea" readonly>${answersContent}</textarea>
-                <button class="px-5 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition mt-4" onclick="copyAnswersToClipboard()">
-                    Copy Answers to Clipboard
-                </button>
-                <button class="btn-primary btn-heart mt-4" onclick="showEmailConfirmationModal()">
-                    Send Email to Elijah <span class="heart-icon">❤️</span>
-                </button>
-            `;
-            showCustomModal(reviewModalHtml);
-        }
-
-        // Function to copy answers to clipboard
-        function copyAnswersToClipboard() {
-            const answersTextarea = document.getElementById('emailAnswersTextarea');
-            if (answersTextarea) {
-                answersTextarea.select();
-                document.execCommand('copy');
-                const copyButton = answersTextarea.nextElementSibling;
-                if (copyButton && copyButton.innerText === 'Copy Answers to Clipboard') {
-                    copyButton.innerText = 'Copied!';
-                    setTimeout(() => {
-                        copyButton.innerText = 'Copy Answers to Clipboard';
-                    }, 2000);
-                }
-            }
-        }
-
-        // Step 2: Show email confirmation modal
-        function showEmailConfirmationModal() {
-            closeCustomModal();
-
-            const confirmationModalHtml = `
-                <p class="text-lg font-semibold mb-4">Are you sure you want to send your answers via email?</p>
-                <div class="flex justify-center gap-4 mt-6">
-                    <button class="btn-primary bg-green-600 hover:bg-green-700" onclick="sendEmail()">
-                        Yes, Send Email
-                    </button>
-                    <button class="btn-primary bg-gray-500 hover:bg-gray-600" onclick="closeCustomModal()">
-                        Cancel
-                    </button>
-                </div>
-            `;
-            showCustomModal(confirmationModalHtml);
-        }
-
-        // Final step: Trigger email (called after confirmation)
-        function sendEmail() {
-            closeCustomModal();
-
-            const senderEmail = document.getElementById('senderEmail').value.trim();
-            const subject = encodeURIComponent(`Questionnaire Answers from ${senderEmail}`);
-            const mailtoLink = `mailto:${RECIPIENT_EMAIL}?subject=${subject}&body=${encodeURIComponent(window.tempAnswersContent)}`;
-
-            window.open(mailtoLink, '_blank');
-
-            showCustomModal(`
-                <p class="text-lg font-semibold mb-4">Email Client Opened!</p>
-                <p class="text-gray-700 mb-6">
-                    Your email client should now be open with your answers. Please ensure the answers are pasted into the email body before sending!
-                </p>
-                <button class="btn-primary" onclick="closeCustomModal()">Close</button>
-            `);
-        }
-    </script>
-</body>
-</html>
+            modalOver
