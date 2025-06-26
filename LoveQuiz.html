@@ -112,8 +112,9 @@
                 background-color: #fff;
                 color: #000;
             }
+            /* Elements with 'no-print' class will be hidden in print */
             .no-print {
-                display: none;
+                display: none !important;
             }
             textarea {
                 border: 1px dashed #94a3b8; /* Dashed border for print to indicate fillable area */
@@ -150,7 +151,7 @@
             .bg-white, .bg-blue-50, .bg-gray-50 {
                 background-color: #fff !important;
             }
-            /* Ensure details content is always open when printing */
+            /* Ensure all details content is always open when printing */
             details[open] summary ~ * { /* General rule for all details content */
                 display: block !important;
             }
@@ -159,6 +160,10 @@
             }
             /* Specific rule to ensure the main legal details section expands on print */
             #legalTermsDetails summary ~ * {
+                display: block !important;
+            }
+            /* Ensure signature box is visible if it was displayed on screen */
+            .signature-box.hidden { /* Override the 'hidden' class only for printing */
                 display: block !important;
             }
         }
@@ -293,7 +298,7 @@
             content: '+'; /* Custom plus icon */
             margin-left: auto; /* Push to the right */
             font-size: 2rem;
-            color: #d18aab; /* Pink color for the icon */
+            color: #d18aab;
             transition: transform 0.2s;
         }
         details[open] summary::after {
@@ -307,12 +312,12 @@
         }
         /* Ensure specific list styles within details */
         details .romantic-list li {
-            font-family: 'Comic Sans MS', cursive; /* Apply Comic Sans to list items */
+            font-family: 'Comic Sans MS', cursive;
             font-size: 1.15rem; /* Slightly smaller than summary but larger than body */
             color: #5d4a66;
         }
         /* Adjustments for text within summary */
-        summary .intro-text-summary { /* Renamed class for clarity */
+        summary .intro-text-summary {
             font-size: 1.15rem; /* Smaller font for introductory text in summary */
             font-weight: 400; /* Regular weight */
             color: #5d4a66; /* Softer text color */
@@ -731,7 +736,7 @@
         </main>
 
         <!-- Final Legal Agreement Section -->
-        <section class="final-legal-section no-print">
+        <section class="final-legal-section">
             <h2 class="handwritten-guide-title">Final Agreement & Acknowledgment</h2>
             <div class="legal-content-area">
                 <!-- Collapsible Legal Terms -->
@@ -955,7 +960,7 @@
             const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
             const legalTermsDetails = document.getElementById('legalTermsDetails');
 
-            // Check if legal details are open
+            // Check if legal terms are open and acknowledged
             if (!legalTermsDetails.open) {
                  showCustomModal(`
                     <p class="text-lg font-semibold mb-4">Review Terms First!</p>
@@ -1016,7 +1021,7 @@
                 answersContent += `\n`;
             }
 
-            answersContent += `Relationship Questionnaire Answers:\n\n`;
+            answersContent += `--- Relationship Questionnaire Answers ---\n\n`;
             document.querySelectorAll('main div').forEach((questionDiv) => {
                 const questionLabel = questionDiv.querySelector('label').innerText.trim();
                 const answerTextarea = questionDiv.querySelector('textarea');
@@ -1028,6 +1033,45 @@
                 }
                 answersContent += `${questionLabel}\n${answer}\n\n`;
             });
+
+            // --- Add Legal Consent & Acknowledgment to Email Body ---
+            const legalSection = document.querySelector('.final-legal-section');
+            if (legalSection) {
+                answersContent += `\n\n--- Legal Consent & Acknowledgment ---\n\n`;
+
+                // Extract all text content from the details, including hidden parts
+                const legalTermsDetailsContent = document.getElementById('legalTermsDetails');
+                if (legalTermsDetailsContent) {
+                    // Temporarily force open to get all text, then revert
+                    const wasOpen = legalTermsDetailsContent.open;
+                    legalTermsDetailsContent.open = true;
+                    answersContent += `\n\nTerms and Conditions:\n\n`;
+                    // Loop through children to extract text in a readable way
+                    Array.from(legalTermsDetailsContent.children).forEach(child => {
+                        if (child.tagName === 'SUMMARY') {
+                            // Skip summary itself or just get its text if useful
+                            // answersContent += child.textContent.trim() + '\n\n';
+                        } else {
+                            answersContent += child.textContent.trim() + '\n\n';
+                        }
+                    });
+                    legalTermsDetailsContent.open = wasOpen; // Revert to original state
+
+                }
+                
+                // Get the consent checkbox text
+                const consentLabel = document.querySelector('#consentCheckboxFinal').nextElementSibling;
+                if (consentLabel) {
+                    answersContent += `Consent: ${consentLabel.textContent.trim()} - ` + (consentCheckboxFinal.checked ? 'Agreed' : 'Not Agreed') + '\n\n';
+                }
+
+                // Get the typed full name (acknowledgment)
+                const fullNameInputText = document.getElementById('fullNameInput').value.trim();
+                if (fullNameInputText) {
+                    answersContent += `Acknowledged by (Typed Name): ${fullNameInputText}\n\n`;
+                }
+            }
+
 
             // Store the answersContent temporarily for the next step
             window.tempAnswersContent = answersContent;
