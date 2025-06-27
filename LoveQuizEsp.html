@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestro Viaje Compartido: Un Cuestionario de Relación</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Dancing Script for a handwritten feel (still used for questions) -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom font for a more modern look, and romantic color palette */
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #fcf4f8; /* Very light pink/blush background */
+            color: #4a2f4c; /* Darker plum/wine text */
+        }
+        /* Style for textareas to ensure good readability */
+        textarea {
+            resize: vertical; /* Allow vertical resizing manually, but JS will auto-grow */
+            min-height: 80px; /* Minimum height for display */
+            padding: 10px;
+            border-radius: 8px; /* Rounded corners for textareas */
+            border: 1px solid #e0b4c7; /* Softer border */
+            background-color: #fcebeb; /* Lighter pink for input */
+            transition: all 0.2s ease-in-out;
+            line-height: 1.6; /* Slightly more space for readability */
+            overflow: hidden; /* Hide scrollbar, as content will expand */
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #d18aab; /* Romantic pink focus border */
+            box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2); /* Soft pink shadow on focus */
+        }
+        /* Style for the initial pre-filled answer text */
+        textarea.initial-answer {
+            color: #94a3b8; /* Lighter grey for pre-filled text */
+            font-style: italic;
+        }
+
+        /* Overriding default Tailwind colors for a romantic theme */
+        .text-blue-800 { /* Header color */
+            color: #8c2f5d; /* Deeper rose/plum for header */
+        }
+        .text-gray-600, .text-gray-700 { /* Body text color */
+            color: #5d4a66; /* Softer, slightly purplish gray */
+        }
+        .bg-blue-50, .border-blue-200 { /* Instructions/Footer background/border */
+            background-color: #f8eaf0; /* Light rose blush */
+            border-color: #e6cee0; /* Softer border */
+        }
+        .text-blue-700 { /* Section headers color */
+            color: #7b4f7f; /* Plum-purple for section headers */
+        }
+        .bg-gray-50 { /* Question card background */
+            background-color: #fcf6f9; /* Very light rose for question cards */
+            border-color: #f2e2ec; /* Subtle border */
+        }
+        .text-gray-800 { /* Question label color */
+            color: #6a4f70; /* Slightly darker plum for labels */
+        }
+        /* Button styling for a romantic look */
+        .btn-primary {
+            @apply px-6 py-3 font-semibold rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105;
+            background-color: #c75b8a; /* Romantic pink/rose */
+            color: white;
+            box-shadow: 0 4px 6px rgba(199, 91, 138, 0.2);
+        }
+        .btn-primary:hover {
+            background-color: #b34a79; /* Darker pink on hover */
+        }
+        /* Specific styling for the PDF download button */
+        .btn-pdf {
+             background-color: #75a76c; /* Softer green */
+             box-shadow: 0 4px 6px rgba(117, 167, 108, 0.2);
+        }
+        .btn-pdf:hover {
+            background-color: #629059; /* Darker green on hover */
+        }
+        /* Styling for the new email answers text area in the custom alert */
+        #emailAnswersTextarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e0b4c7;
+            background-color: #fcebeb;
+            font-family: "Inter", sans-serif;
+            color: #4a2f4c;
+            resize: vertical;
+            margin-top: 10px;
+            margin-bottom: 15px; /* Added space below textarea */
+        }
+        input[type="email"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e0b4c7;
+            background-color: #fcebeb;
+            transition: all 0.2s ease-in-out;
+            margin-top: 5px;
+        }
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #d18aab;
+            box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2);
+        }
+
+        /* Specific print styles */
+        @media print {
+            body {
+                background-color: #fff;
+                color: #000;
+            }
+            /* Elements with 'no-print' class will be hidden in print */
+            .no-print {
+                display: none !important;
+            }
+            textarea {
+                border: 1px dashed #94a3b8; /* Dashed border for print to indicate fillable area */
+                background-color: #fff;
+                min-height: 120px; /* More space for writing on print */
+                height: auto !important; /* Ensure height adapts for print */
+                overflow: hidden !important; /* No scrollbars on print */
+                padding: 5px;
+            }
+            /* Ensure the initial-answer styling is removed for printing if no actual user input */
+            textarea.initial-answer {
+                color: #000 !important; /* Ensure black text for print */
+                font-style: normal !important; /* Remove italic for print */
+            }
+
+            /* Adjust margins for printing */
+            .p-4, .sm:p-6, .md:p-8 {
+                padding: 1rem !important;
+            }
+            .max-w-4xl {
+                max-width: 100% !important;
+                width: 100% !important;
+                box-shadow: none !important;
+                border: none !important;
+            }
+            .rounded-2xl {
+                border-radius: 0 !important;
+            }
+            /* Remove shadows and borders for cleaner print */
+            .shadow-xl, .shadow-sm, .border {
+                box-shadow: none !important;
+                border: none !important;
+            }
+            .bg-white, .bg-blue-50, .bg-gray-50 {
+                background-color: #fff !important;
+            }
+            /* Ensure all details content is always open when printing */
+            details[open] summary ~ * { /* General rule for all details content */
+                display: block !important;
+            }
+            details summary::after { /* Hide plus/minus on print for all details */
+                 content: none !important;
+            }
+            /* Specific rule to ensure the main legal details section expands on print */
+            #legalTermsDetails summary ~ * {
+                display: block !important;
+            }
+            /* Ensure signature box is visible if it was displayed on screen */
+            .signature-box.hidden { /* Override the 'hidden' class only for printing */
+                display: block !important;
+            }
+        }
+        /* Custom modal overlay for confirmation */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000; /* Higher than other elements */
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 600px; /* Smaller modal width */
+            width: 90%; /* Responsive width */
+            max-height: 90vh; /* Limit height to viewport height */
+            overflow-y: auto; /* Allow scrolling within the modal if content exceeds max-height */
+            text-align: center;
+            font-family: "Inter", sans-serif;
+            color: #334155;
+            position: relative; /* For absolute positioning of close button */
+            display: flex; /* Flex for content alignment */
+            flex-direction: column; /* Stack content vertically */
+        }
+        .modal-close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af; /* Gray color for the X */
+            padding: 5px;
+            line-height: 1; /* Adjust line height for better centering of X */
+        }
+        .modal-close-btn:hover {
+            color: #4a2f4c; /* Darker color on hover */
+        }
+
+        /* Heart-shaped button specific styles */
+        .btn-heart {
+            background-color: #3b82f6; /* Blue background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px; /* Space between text and heart */
+        }
+        .btn-heart:hover {
+            background-color: #2563eb; /* Darker blue on hover */
+        }
+        .btn-heart .heart-icon {
+            font-size: 1.25rem; /* Size of the heart emoji */
+        }
+
+        /* Custom list styling for the guide section */
+        .romantic-list {
+            list-style: none; /* Remove default bullet points */
+            padding-left: 0;
+            text-align: left; /* Align text to the left */
+        }
+        .romantic-list li {
+            position: relative;
+            padding-left: 1.8rem; /* Space for the heart icon */
+            margin-bottom: 0.75rem; /* Space between list items */
+        }
+        .romantic-list li::before {
+            content: '❤️'; /* Heart emoji as bullet */
+            position: absolute;
+            left: 0;
+            top: 0.1rem; /* Adjust vertical alignment */
+            color: #d18aab; /* Romantic pink color for hearts */
+            font-size: 1.1rem; /* Size of the heart icon */
+        }
+        /* Style for the handwritten section - now Comic Sans */
+        .handwritten-guide-title {
+            font-family: 'Comic Sans MS', cursive; /* Changed to Comic Sans */
+            font-weight: 700; /* Bold for title */
+            font-size: 2.5rem; /* Larger font size for title */
+            color: #8c2f5d; /* Deeper rose/plum */
+        }
+        .handwritten-guide-text {
+            font-family: 'Comic Sans MS', cursive; /* Changed to Comic Sans */
+            font-weight: 400; /* Regular weight for text */
+            font-size: 1.25rem; /* Slightly larger for readability */
+            color: #5d4a66; /* Softer, slightly purplish gray */
+            line-height: 1.8; /* More space for readability */
+        }
+        /* Style for the handwritten questions */
+        .handwritten-question-label {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700; /* Bold for questions */
+            font-size: 1.5rem; /* Larger font size for readability */
+            color: #7b4f7f; /* Plum-purple */
+            line-height: 1.5;
+        }
+
+        /* Styling for the details/summary element */
+        details {
+            background-color: #f8eaf0; /* Light rose blush */
+            border: 1px solid #e6cee0; /* Softer border */
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 1rem;
+            margin-bottom: 2rem; /* Space below the guide box */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        }
+        summary {
+            cursor: pointer;
+            display: flex; /* Allow content to align */
+            flex-wrap: wrap; /* Allow content to wrap if needed */
+            align-items: center; /* Vertically center content */
+            font-family: 'Comic Sans MS', cursive; /* Apply Comic Sans to summary */
+            font-weight: 700; /* Bold for summary text */
+            font-size: 1.5rem; /* Match the original title size, adjust as needed */
+            color: #8c2f5d; /* Deeper rose/plum */
+            padding: 0.5rem 0; /* Padding for click area */
+            line-height: 1.2; /* Adjust line height for summary text */
+            user-select: none; /* Prevent text selection on click */
+        }
+        summary::-webkit-details-marker {
+            display: none; /* Hide default arrow */
+        }
+        summary::after {
+            content: '+'; /* Custom plus icon */
+            margin-left: auto; /* Push to the right */
+            font-size: 2rem;
+            color: #d18aab;
+            transition: transform 0.2s;
+        }
+        details[open] summary::after {
+            content: '-'; /* Change to minus when open */
+            transform: rotate(0deg); /* No rotation needed for - */
+        }
+        details[open] summary {
+            border-bottom: 1px dashed #e0b4c7;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+        }
+        /* Ensure specific list styles within details */
+        details .romantic-list li {
+            font-family: 'Comic Sans MS', cursive;
+            font-size: 1.15rem; /* Slightly smaller than summary but larger than body */
+            color: #5d4a66;
+        }
+        /* Adjustments for text within summary */
+        summary .intro-text-summary {
+            font-size: 1.15rem; /* Smaller font for introductory text in summary */
+            font-weight: 400; /* Regular weight */
+            color: #5d4a66; /* Softer text color */
+            margin-left: 0.5rem; /* Small margin after title */
+        }
+        summary .more-instructions-text {
+            display: block; /* Force this onto a new line for better readability */
+            width: 100%; /* Take full width */
+            font-size: 1rem; /* Even smaller, subtle hint */
+            color: #a0a0a0; /* Lighter color */
+            margin-top: 0.5rem; /* Space above */
+        }
+        /* Style for the new introduction text */
+        .intro-section-text {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700; /* Bold for the introductory text */
+            font-size: 1.8rem; /* Large font size for impact */
+            color: #7b4f7f; /* Plum-purple to match questions */
+            line-height: 1.5;
+            text-align: center;
+            margin-top: 2rem; /* Space above it */
+            margin-bottom: 2rem; /* Space below it */
+            padding: 0 1rem; /* Padding on sides for smaller screens */
+            position: relative; /* For absolute positioning of optional emoji/sticker */
+        }
+        .intro-section-text .animated-sticker {
+            position: absolute;
+            right: 10%; /* Adjust as needed */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 60px; /* Adjust size as needed */
+            height: 60px;
+            border-radius: 50%; /* Make it round */
+            object-fit: cover;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        @media (max-width: 768px) {
+            .intro-section-text .animated-sticker {
+                position: static; /* Remove absolute positioning on small screens */
+                display: block;
+                margin: 1rem auto; /* Center it */
+            }
+        }
+
+
+        /* Styles for the Legal Terms Section now open by default */
+        .final-legal-section {
+            background-color: #f8eaf0; /* Light rose blush */
+            border: 1px solid #e6cee0; /* Softer border */
+            border-radius: 0.75rem; /* Rounded corners */
+            padding: 1.5rem; /* Slightly more padding */
+            margin-top: 3rem; /* More space before it */
+            margin-bottom: 2rem; /* Space after it, before footer */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+        }
+        .final-legal-section h2 { /* Targeting the main title of this section */
+            font-family: 'Comic Sans MS', cursive;
+            font-weight: 700;
+            font-size: 2.2rem; /* Adjusted for an open section */
+            color: #8c2f5d;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        .final-legal-section h3 {
+            font-family: "Inter", sans-serif;
+            font-weight: 700;
+            color: #4a2f4c;
+            margin-top: 1.5rem; /* More space for subheadings */
+            margin-bottom: 0.75rem;
+            font-size: 1.15rem; /* Slightly smaller for subheadings */
+        }
+        .final-legal-section p, .final-legal-section ul {
+            font-family: "Inter", sans-serif;
+            font-size: 0.95rem; /* Slightly larger text for better readability */
+            color: #5d4a66;
+            line-height: 1.6;
+        }
+        .final-legal-section ul {
+            padding-left: 1.8rem; /* Indent list items */
+        }
+        .final-legal-section .consent-checkbox-container {
+            margin-top: 2rem; /* More space above checkbox */
+            text-align: center;
+        }
+        .final-legal-section .consent-checkbox-container label {
+            font-family: "Inter", sans-serif;
+            font-size: 1.05rem; /* Slightly larger label */
+            font-weight: 600;
+            color: #334155;
+            display: flex; /* Align checkbox and text */
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .final-legal-section .consent-checkbox-container input[type="checkbox"] {
+            margin-right: 0.75rem; /* Space between checkbox and text */
+        }
+
+        /* Signature Box Styling */
+        .signature-box {
+            background-color: #fcf6f9;
+            border: 1px dashed #d18aab;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+        }
+        .signature-box label {
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            color: #4a2f4c;
+            margin-bottom: 0.75rem;
+            display: block;
+        }
+        .signature-box input[type="text"] {
+            font-family: "Inter", sans-serif;
+            text-align: center;
+            width: 80%;
+            max-width: 300px;
+            padding: 0.5rem;
+            border: 1px solid #e0b4c7;
+            border-radius: 0.375rem;
+            background-color: #fcebeb;
+            color: #4a2f4c;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .signature-box .acknowledgement-text {
+            font-family: "Inter", sans-serif;
+            font-size: 0.9rem;
+            color: #6a4f70;
+            margin-top: 0.75rem;
+        }
+        .dancing-script-signature {
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+            font-size: 2.5rem;
+            color: #8c2f5d;
+            margin-top: 1.5rem;
+            border-top: 2px solid #d18aab;
+            padding-top: 0.5rem;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        /* Styling for the main legal details summary and its content */
+        .legal-terms-details {
+            background-color: #f8eaf0;
+            border: 1px solid #e6cee0;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .legal-terms-details summary {
+            font-family: 'Comic Sans MS', cursive;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #8c2f5d;
+            padding: 0.5rem 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        .legal-terms-details summary::after {
+            content: '+';
+            margin-left: auto;
+            font-size: 2rem;
+            color: #d18aab;
+            transition: transform 0.2s;
+        }
+        details[open] summary::after {
+            content: '-';
+            transform: rotate(0deg);
+        }
+        details[open] summary {
+            border-bottom: 1px dashed #e0b4c7;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+        }
+        .legal-terms-details .legal-content-area h3 {
+            font-family: "Inter", sans-serif;
+            font-weight: 700;
+            color: #4a2f4c;
+            margin-top: 1rem;
+            font-size: 1.15rem;
+        }
+        .legal-terms-details .legal-content-area p, .legal-terms-details .legal-content-area ul {
+            font-family: "Inter", sans-serif;
+            font-size: 0.9rem;
+            color: #5d4a66;
+            line-height: 1.6;
+            text-align: left;
+        }
+        .legal-terms-details .legal-content-area ul {
+            padding-left: 1.5rem;
+        }
+
+        /* Styling for the new email input container at the bottom */
+        .email-input-bottom-container {
+            padding: 1.5rem; /* Consistent padding with other sections */
+            background-color: #f8eaf0; /* Light rose blush background */
+            border-radius: 0.75rem; /* Rounded corners */
+            border: 1px solid #e6cee0; /* Softer border */
+            margin-top: 2rem; /* Space from the section above */
+            margin-bottom: 2rem; /* Space before the footer */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+            text-align: center; /* Center content */
+        }
+        .email-input-bottom-container label {
+            font-family: "Inter", sans-serif;
+            font-weight: 600;
+            color: #4a2f4c;
+            margin-bottom: 1rem; /* More space below label */
+            display: block; /* Ensure label takes full width */
+            font-size: 1.1rem; /* Slightly larger font for prominence */
+        }
+        .email-input-bottom-container input[type="email"] {
+            width: 80%; /* Adjusted width for centering */
+            max-width: 400px; /* Max width for larger screens */
+            margin: 0 auto; /* Center the input field */
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #e0b4c7;
+            background-color: #fcebeb;
+            transition: all 0.2s ease-in-out;
+        }
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #d18aab;
+            box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2);
+        }
+
+        /* Style for the new direct submission box (Formspree) */
+        .direct-submit-box {
+            background-color: #fffbeb; /* Very light yellow */
+            color: #854d0c; /* Darker yellow/orange text */
+            border: 1px solid #fde68a; /* Soft yellow border */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 3rem; /* Space above */
+            margin-bottom: 1rem; /* Reduced margin to make space for mailto */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .direct-submit-box .message-text {
+            font-family: "Inter", sans-serif;
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        .direct-submit-box .btn-primary { /* Style the button within the yellow box */
+            background-color: #f59e0b; /* A brighter yellow/orange for the button */
+            color: white;
+            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.2);
+        }
+        .direct-submit-box .btn-primary:hover {
+            background-color: #d97706; /* Darker on hover */
+        }
+
+        /* NEW: Style for the Mailto submission box */
+        .mailto-submit-box {
+            background-color: #e6f7ff; /* Light blue */
+            color: #0c4a6e; /* Darker blue text */
+            border: 1px solid #a3d9f7; /* Soft blue border */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem; /* Space from Formspree box */
+            margin-bottom: 2rem; /* Space below */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .mailto-submit-box .message-text {
+            font-family: "Inter", sans-serif;
+            font-size: 1.05rem; /* Slightly smaller text for this option */
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+        .mailto-submit-box .btn-primary { /* Mailto button style */
+            background-color: #007bff; /* Standard blue */
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+        }
+        .mailto-submit-box .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Keyframes for the pulse animation */
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .recollection-animation-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 3rem 0; /* Spacing above and below */
+            min-height: 100px; /* Ensure space for the animation */
+            position: relative;
+        }
+        .recollection-animation-container .heart-pulse {
+            font-size: 5rem; /* Large heart */
+            color: #e04a7a; /* Vibrant pink heart */
+            animation: pulse 2s infinite ease-in-out; /* Apply pulse animation */
+            text-shadow: 0 0 15px rgba(224, 74, 122, 0.5); /* Soft glow */
+        }
+    </style>
+</head>
+<body class="p-4 sm:p-6 md:p-8 flex items-center justify-center min-h-screen">
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl p-6 sm:p-8 md:p-10 border border-gray-200">
+        <!-- Header Section -->
+        <header class="text-center mb-8">
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-blue-800 mb-2">
+                Nuestro Viaje Compartido: Un Cuestionario de Relación ❤️
+            </h1>
+            <p class="text-gray-600 text-lg sm:text-xl">
+                Un espacio para explorar nuestras perspectivas sobre aspectos importantes de una relación a largo plazo.
+            </p>
+        </header>
+
+        <!-- Instructions Section - now an expandable <details> tag -->
+        <details id="gentleGuideDetails">
+            <summary>
+                <h2 class="handwritten-guide-title mb-0 inline">Una Guía Suave:</h2>
+                <span class="handwritten-guide-text more-instructions-text">
+                    Haz clic aquí para más instrucciones...
+                </span>
+            </summary>
+            <!-- Moved introductory paragraph inside the details content -->
+            <p class="handwritten-guide-text mt-4">
+                Por favor, tómate tu tiempo para reflexionar sobre cada pregunta y compartir tus pensamientos. No hay respuestas correctas o incorrectas, solo perspectivas que nos ayudan a entendernos más profundamente mientras consideramos nuestro hermoso futuro juntos. Tus pensamientos honestos son verdaderamente valorados.
+            </p>
+            <ul class="romantic-list handwritten-guide-text mt-4">
+                <li>Para rellenar digitalmente: Abre este archivo en cualquier navegador web. Escribe directamente en los cuadros de texto. Las sugerencias pre-rellenadas desaparecerán cuando escribas y reaparecerán si dejas un cuadro vacío.</li>
+                <li>Para guardar como PDF: Haz clic en el botón "Descargar como PDF" en la parte inferior de la página. Esto abrirá el diálogo de impresión de tu navegador, donde podrás seleccionar "Guardar como PDF" (o una opción similar como "Microsoft Print to PDF") como destino.</li>
+                <li>**Para enviar tus respuestas:** Ahora tienes dos opciones flexibles:
+                    <ul class="romantic-list handwritten-guide-text mt-2 ml-4">
+                        <li>**Opción 1: Enviar Directamente (Recomendado):** Después de completar el cuestionario, usa el botón "Enviar Respuestas Directamente a Elijah ❤️" a continuación. Esto enviará tus respuestas de forma segura a través de nuestro socio de servicio, y Elijah las recibirá de inmediato.</li>
+                        <li>**Opción 2: Enviar a Través de tu Aplicación de Correo Electrónico (Alternativa):** Si la opción directa no está disponible o no la prefieres, haz clic en el botón "Enviar Respuestas a Través de tu Aplicación de Correo Electrónico 📧". Esto abrirá el programa de correo electrónico de tu dispositivo con tus respuestas pre-rellenadas. Luego podrás enviar el correo manualmente.</li>
+                    </ul>
+                </li>
+                <li class="mt-4 no-print">Una vez completado, podremos discutir tus respuestas juntos para profundizar nuestro entendimiento mutuo.</li>
+            </ul>
+        </details>
+
+        <!-- New Introduction Section -->
+        <section class="intro-section-text">
+            Mientras te embarcas en este hermoso viaje a través de nuestras preguntas, recuerda que cada respuesta es una pieza preciada de tu corazón y tu mente. Esto no se trata solo de encontrar un acuerdo, sino de ver y celebrar verdaderamente la persona increíble que eres, y cómo tu espíritu único se entrelaza con el mío mientras soñamos con nuestra maravillosa vida juntos. Tómate tu tiempo, deja que tus pensamientos fluyan libremente y sabe que estoy muy emocionado de leer cada palabra.
+            <!-- Placeholder for an animated sticker/GIF - replace with actual URL if desired -->
+            <!-- Example: <img src="https://media.giphy.com/media/v1.gif" alt="Animated Heart" class="animated-sticker no-print"> -->
+        </section>
+
+        <!-- Recollection Animation Section -->
+        <div id="recollectionAnimation" class="recollection-animation-container no-print">
+            <span class="heart-pulse">❤️</span>
+        </div>
+
+        <!-- Start of the FORM tag for Formspree submission -->
+        <form id="loveQuizForm" action="https://formspree.io/f/mqabgreo" method="POST">
+            <!-- Questionnaire Section -->
+            <main class="space-y-8">
+                <!-- Question 1: Shared Values and Beliefs -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q1" class="block handwritten-question-label mb-2">
+                        1. ¿Qué tan importante es para ti que compartamos valores o creencias fundamentales similares, y cómo ves que eso influya en nuestra vida juntos?
+                    </label>
+                    <textarea id="q1" name="q1_values" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 2: Embracing a Shared Future -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q2" class="block handwritten-question-label mb-2">
+                        2. ¿Qué te emociona más de construir un futuro y crear nuevas experiencias juntos, como una pareja que empieza de nuevo?
+                    </label>
+                    <textarea id="q2" name="q2_future" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 3: A New Chapter Together -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q3" class="block handwritten-question-label mb-2">
+                        3. Si formamos una familia, ¿qué tan importante es para ti que experimentemos la paternidad juntos por primera vez?
+                    </label>
+                    <textarea id="q3" name="q3_parenthood" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 4: Mutual Respect and Partnership -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q4" class="block handwritten-question-label mb-2">
+                        4. ¿Cómo ves el equilibrio entre liderazgo y compañerismo en una relación, y qué significa 'respeto' en esa dinámica?
+                    </label>
+                    <textarea id="q4" name="q4_leadership_respect" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 5: A Shared Vision for Family Life -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q5" class="block handwritten-question-label mb-2">
+                        5. ¿Cómo concibes el papel de los hijos en nuestro matrimonio y qué implica realmente criarlos para ti?
+                    </label>
+                    <textarea id="q5" name="q5_children_role" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 6: The Value of True Friendship -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q6" class="block handwritten-question-label mb-2">
+                        6. ¿Cómo enriquecen tus amistades tu vida y cómo equilibras tus conexiones sociales con nuestra relación?
+                    </label>
+                    <textarea id="q6" name="q6_friendships" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 7: Harmonious Compatibility -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q7" class="block handwritten-question-label mb-2">
+                        7. ¿Qué crea una sensación duradera de comodidad, atracción y profunda compatibilidad para ti en una pareja?
+                    </label>
+                    <textarea id="q7" name="q7_compatibility" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 8: Seamless Integration and Unity -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q8" class="block handwritten-question-label mb-2">
+                        8. ¿Cómo nos ves construyendo un frente fuerte y unido como pareja, especialmente al enfrentar desafíos externos o al integrarnos con nuestras familias?
+                    </label>
+                    <textarea id="q8" name="q8_united_front" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 9: Intimacy and Respect (Public and Private) -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q9" class="block handwritten-question-label mb-2">
+                        9. ¿Qué tan importantes son tanto la intimidad privada como el respeto público para construir una relación fuerte y duradera?
+                    </label>
+                    <textarea id="q9" name="q9_intimacy_respect" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 10: Cherished Companionship -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q10" class="block handwritten-question-label mb-2">
+                        10. ¿Qué te hace disfrutar verdaderamente pasar tiempo con tu pareja y cómo te gusta fomentar activamente esa conexión?
+                    </label>
+                    <textarea id="q10" name="q10_companionship" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 11: Valuing Shared Time and Presence -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q11" class="block handwritten-question-label mb-2">
+                        11. ¿Cómo prefieres pasar tiempo de calidad juntos y qué te hace sentir más conectado y presente en esos momentos?
+                    </label>
+                    <textarea id="q11" name="q11_quality_time" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 12: Mutual Support and Clear Communication -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q12" class="block handwritten-question-label mb-2">
+                        12. Cuando enfrentemos decisiones difíciles o desafíos, ¿cómo nos ves apoyándonos mutuamente y comunicándonos eficazmente para encontrar soluciones?
+                    </label>
+                    <textarea id="q12" name="q12_support_comm" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+
+                <!-- Question 13: Commitment to the Partnership -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-100">
+                    <label for="q13" class="block handwritten-question-label mb-2">
+                        13. ¿Qué significa 'compromiso' para ti en una relación a largo plazo, y qué esfuerzo continuo crees que se necesita de ambos para que un matrimonio realmente prospere?
+                    </label>
+                    <textarea id="q13" name="q13_commitment" class="w-full" onfocus="handleFocus(this)" onblur="handleBlur(this)"></textarea>
+                </div>
+            </main>
+
+            <!-- Final Legal Agreement Section -->
+            <section class="final-legal-section">
+                <h2 class="handwritten-guide-title">Acuerdo Final y Reconocimiento</h2>
+                <div class="legal-content-area">
+                    <!-- Collapsible Legal Terms -->
+                    <details id="legalTermsDetails" class="legal-terms-details">
+                        <summary>
+                            <span class="handwritten-guide-text more-instructions-text" style="font-family: 'Inter', sans-serif;">
+                                Haz clic para revisar los Términos y Condiciones.
+                            </span>
+                        </summary>
+                        <h3 class="text-xl font-bold mb-2">Términos y Condiciones para el Uso del Cuestionario</h3>
+                        <p class="mb-4 text-sm">
+                            Este "Nuestro Viaje Compartido: Un Cuestionario de Relación" (el "Documento") se proporciona únicamente con el propósito de fomentar el entendimiento personal y la comunicación dentro de una relación romántica privada. Al continuar, reconoces y aceptas los siguientes términos:
+                        </p>
+                        <ul class="list-disc list-inside mb-4 text-sm">
+                            <li>**Participación Voluntaria:** Tu participación al completar este Documento y compartir tus respuestas es completamente voluntaria.</li>
+                            <li>**Uso Previsto de la Información:** Cualquier información, conocimiento o datos personales que compartas dentro de este Documento están destinados para el uso privado y personal de Elijah y tú, con el propósito de entendimiento y discusión mutua de la relación. No está destinado para divulgación pública, uso comercial o cualquier propósito más allá de la exploración de tu relación privada.</li>
+                            <li>**No Asesoramiento Legal:** Este Documento y su contenido no constituyen asesoramiento legal, asesoramiento psicológico ni ningún tipo de servicio profesional. Está diseñado puramente como una herramienta para la reflexión y comunicación personal.</li>
+                            <li>**Sin Carácter Legal Vinculante:** La cumplimentación y envío de este Documento, y cualquier término aquí mencionado, no crean un contrato o acuerdo legalmente vinculante entre tú y Elijah, ni establece ninguna obligación o derecho legal formal más allá del alcance de una relación personal privada.</li>
+                            <li>**Descargo de Responsabilidad:** Elijah renuncia a cualquier responsabilidad por el uso o mal uso de la información contenida en este Documento, o por cualquier resultado derivado de tu participación.</li>
+                        </ul>
+
+                        <h3 class="text-xl font-bold mt-6 mb-2">Aviso de No Divulgación y Derechos de Autor</h3>
+                        <p class="mb-4 text-sm">
+                            Este Documento, incluyendo su estructura, preguntas, diseño y contenido textual, es propiedad intelectual de Elijah y está protegido por derechos de autor. Al acceder y utilizar este Documento, aceptas lo siguiente:
+                        </p>
+                        <ul class="list-disc list-inside mb-4 text-sm">
+                            <li>**Confidencialidad:** El contenido de este Documento es confidencial y está destinado únicamente para tu uso personal como parte de tu relación privada con Elijah.</li>
+                            <li>**Prohibida la Reproducción o Distribución:** Aceptas no copiar, reproducir, distribuir, publicar, mostrar, ejecutar, modificar, crear trabajos derivados de, transmitir o explotar de ninguna manera ninguna parte de este Documento sin el consentimiento previo por escrito de Elijah.</li>
+                            <li>**Infracción de Derechos de Autor:** Cualquier reproducción o distribución no autorizada de este Documento puede constituir una infracción de derechos de autor y podría dar lugar a acciones legales.</li>
+                        </ul>
+                    </details>
+
+                    <!-- Acknowledgment Checkbox and Signature Box (always visible, but content toggled by checkbox) -->
+                    <div class="mt-6">
+                        <div class="consent-checkbox-container">
+                            <label for="consentCheckboxFinal" class="flex items-center justify-center cursor-pointer">
+                                <input type="checkbox" id="consentCheckboxFinal" name="consent_agreed" value="Yes" class="form-checkbox h-5 w-5 text-pink-600 rounded mr-3">
+                                He leído, comprendido y acepto los Términos, Consentimiento y No Divulgación anteriores.
+                            </label>
+                        </div>
+
+                        <!-- Signature/Name Input Box -->
+                        <div id="signatureBox" class="signature-box hidden">
+                            <label for="fullNameInput">
+                                Escribe tu Nombre Completo para Aceptar:
+                            </label>
+                            <input type="text" id="fullNameInput" name="acknowledged_by" placeholder="Tu Nombre Completo">
+                            <p class="acknowledgement-text">
+                                Esto actúa como tu reconocimiento digital de acuerdo.
+                            </p>
+                            <div class="mt-4 pt-4">
+                                <p id="displayedSignature" class="dancing-script-signature"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Email Address Input Container -->
+            <section class="email-input-bottom-container no-print">
+                <label for="senderEmail" class="block text-lg font-medium text-gray-800 mb-2">
+                    Tu Dirección de Correo Electrónico:
+                </label>
+                <input type="email" id="senderEmail" name="_replyto" class="w-full" placeholder="tunombre@ejemplo.com">
+            </section>
+
+            <!-- Formspree Direct Submission Box -->
+            <div class="direct-submit-box no-print">
+                <p class="message-text">
+                    ¡Gracias por dar este primer paso! Quería que esto fuera realmente sencillo para ti. Cuando te sientas lista, simplemente haz clic en el botón de abajo y tus respuestas llegarán directamente a mi bandeja de entrada. Es una forma segura y sencilla de que nos acerquemos aún más mientras seguimos construyendo nuestro futuro. ¡Estoy muy emocionado por nuestra próxima conversación!
+                </p>
+                <!-- This button will now submit the form directly to Formspree -->
+                <button type="submit" class="btn-primary" id="submitFormButton">
+                    Enviar Respuestas Directamente a Elijah ❤️
+                </button>
+            </div>
+        </form> <!-- End of the FORM tag (moved so mailto button is outside form) -->
+
+        <!-- NEW: Mailto Submission Box (Outside the Form) -->
+        <div class="mailto-submit-box no-print">
+            <p class="message-text">
+                Como alternativa, si la opción de envío directo no te funciona, también puedes enviar tus respuestas usando la aplicación de correo electrónico de tu dispositivo. Esto abrirá un nuevo borrador de correo electrónico con todas tus respuestas listas para enviar.
+            </p>
+            <button type="button" class="btn-primary" id="sendEmailClientButton">
+                Enviar Respuestas a Través de tu Aplicación de Correo Electrónico 📧
+            </button>
+        </div>
+
+
+        <!-- Footer (now only contains PDF button) -->
+        <footer class="text-center mt-12 p-4 bg-blue-50 rounded-lg border border-blue-200 no-print">
+            <h3 class="text-xl sm:text-2xl font-semibold text-blue-700 mb-3">¡Gracias por tus Reflexiones!</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Tus respuestas proporcionarán valiosos conocimientos para nuestra conversación sobre un futuro compartido.
+            </p>
+            <button onclick="window.print()" class="btn-primary btn-pdf">
+                Descargar como PDF
+            </button>
+            <p class="text-gray-600 text-lg font-semibold italic mt-4">Con amor, Elijah</p>
+        </footer>
+    </div>
+
+    <script>
+        // Store recipient email globally
+        const RECIPIENT_EMAIL = "iliemagureanu2023@gmail.com"; // This is still used by Formspree internally for the reply-to header
+
+        // Pre-filled answers for each question (Spanish translations)
+        const prefilledAnswers = {
+            q1: "Es primordial para un camino unificado, asegurando que nuestra base se alinee con los principios divinos y los objetivos de vida compartidos.",
+            q2: "Emocionado de construir una vida fundada en nuestra fe compartida, creando una nueva unidad familiar que refleje nuestros valores y compromiso.",
+            q3: "Muy importante. Experimentar la paternidad juntos por primera vez es un viaje sagrado que emprendemos como uno solo.",
+            q4: "Respeto significa valorar el orden divino, donde el hombre lidera con amor y la mujer apoya con sabiduría, asegurando un crecimiento mutuo.",
+            q5: "Los hijos son una bendición, para ser criados en fe y disciplina, entendiendo el compromiso requerido para su desarrollo espiritual y moral.",
+            q6: "Las verdaderas amistades son vitales para el apoyo, pero nuestro vínculo principal en el matrimonio tiene prioridad, integrando a los amigos en nuestra vida compartida armoniosamente.",
+            q7: "La profunda compatibilidad surge de la fe compartida, el respeto mutuo y la voluntad de crecer juntos en amor y comprensión, aceptando las imperfecciones.",
+            q8: "Construir un frente fuerte significa priorizar nuestro vínculo matrimonial por encima de todo, presentando siempre una postura unida, especialmente ante influencias externas.",
+            q9: "Tanto la intimidad privada como el respeto público son pilares para un vínculo fuerte y duradero; la intimidad privada profundiza nuestra conexión, mientras que el respeto público honra nuestra relación ante el mundo.",
+            q10: "Disfruto más el tiempo juntos cuando estamos involucrados en actividades con propósito, creciendo en fe, o simplemente valorando momentos de tranquila devoción mutua.",
+            q11: "Tiempo de calidad significa momentos intencionales de conexión, nutrición espiritual y planificación de la visión compartida, enfocándose en tiempo primordial y dedicado juntos.",
+            q12: "Ante desafíos o decisiones difíciles, el apoyo significa escuchar activamente, orar y buscar guía divina. La comunicación es clara, honesta y arraigada en el amor y la paciencia.",
+            q13: "El compromiso es un pacto de por vida ante Dios, que requiere un esfuerzo continuo, sacrificio y una dedicación inquebrantable a nuestro viaje espiritual y familiar compartido."
+        };
+
+        // Custom modal function (replaces window.alert for better control)
+        function showCustomModal(contentHtml, modalId = 'customModalOverlay') {
+            const existingModal = document.getElementById(modalId);
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.id = modalId;
+            modalOverlay.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close-btn" onclick="closeCustomModal('${modalId}')">X</button>
+                    ${contentHtml}
+                </div>
+            `;
+            document.body.appendChild(modalOverlay);
+
+            // Dynamically adjust textarea height within modal if it exists
+            const answersTextarea = document.getElementById('emailAnswersTextarea');
+            if (answersTextarea) {
+                answersTextarea.style.height = 'auto';
+                answersTextarea.style.maxHeight = 'calc(90vh - 150px)';
+                answersTextarea.style.overflowY = 'auto';
+                answersTextarea.style.height = (answersTextarea.scrollHeight) + 'px';
+            }
+        }
+
+        function closeCustomModal(modalId = 'customModalOverlay') {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Function to set initial answer in textarea
+        function setInitialAnswer(textarea) {
+            const qId = textarea.id;
+            // Ensure prefilledAnswers has the key
+            if (prefilledAnswers[qId]) {
+                textarea.value = prefilledAnswers[qId];
+                textarea.classList.add('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            }
+        }
+
+        // Handle textarea focus (clear pre-filled text)
+        function handleFocus(textarea) {
+            const qId = textarea.id;
+            // Check if current value matches prefilled before clearing
+            if (textarea.value === prefilledAnswers[qId]) {
+                textarea.value = '';
+                textarea.classList.remove('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+            }
+        }
+
+        // Handle textarea blur (restore pre-filled text if empty)
+        function handleBlur(textarea) {
+            const qId = textarea.id;
+            if (textarea.value.trim() === '') {
+                // Restore prefilled text if empty
+                textarea.value = prefilledAnswers[qId];
+                textarea.classList.add('initial-answer');
+                textarea.style.height = 'auto'; // Recalculate height
+                textarea.style.height = (textarea.scrollHeight) + 'px';
+            }
+        }
+
+        // Auto-resize textareas based on content (for user input)
+        document.addEventListener('input', function (event) {
+            if (event.target.tagName.toLowerCase() === 'textarea' && !event.target.classList.contains('initial-answer')) {
+                event.target.style.height = 'auto';
+                event.target.style.height = (event.target.scrollHeight) + 'px';
+            }
+        });
+
+        // Function to validate email format
+        function isValidEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        // Function to collect all answers for mailto
+        function collectAnswersForMailto() {
+            let answersText = '';
+
+            // 1. Collect Questionnaire Answers
+            document.querySelectorAll('main textarea').forEach(textarea => {
+                const questionLabel = textarea.previousElementSibling.textContent.trim();
+                let answer = textarea.value.trim();
+
+                // If the answer is still the pre-filled one, send an empty string.
+                if (prefilledAnswers[textarea.id] && answer === prefilledAnswers[textarea.id]) {
+                    answer = '';
+                }
+
+                answersText += `${questionLabel}\n`;
+                answersText += `Respuesta: ${answer || '[No se proporcionó respuesta]'}\n\n`;
+            });
+
+            // 2. Collect Email Address
+            const senderEmailInput = document.getElementById('senderEmail');
+            if (senderEmailInput && senderEmailInput.value.trim()) {
+                answersText += `--- Información del Remitente ---\n`;
+                answersText += `Correo Electrónico del Remitente: ${senderEmailInput.value.trim()}\n\n`;
+            }
+
+            // 3. Collect Legal Consent & Acknowledgment
+            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
+            const legalTermsDetailsElement = document.getElementById('legalTermsDetails');
+            const fullNameInput = document.getElementById('fullNameInput');
+
+            answersText += `--- Reconocimiento Legal ---\n`;
+
+            if (consentCheckboxFinal && consentCheckboxFinal.checked) {
+                const consentLabelElement = document.querySelector('label[for="consentCheckboxFinal"]');
+                const consentLabelText = consentLabelElement ? Array.from(consentLabelElement.childNodes)
+                                                        .filter(node => node.nodeType === Node.TEXT_NODE)
+                                                        .map(node => node.textContent.trim())
+                                                        .join(' ') : '';
+                answersText += `Consentimiento: ${consentLabelText} - Aceptado\n`;
+
+                if (fullNameInput && fullNameInput.value.trim()) {
+                    answersText += `Reconocido por (Nombre Escrito): ${fullNameInput.value.trim()}\n`;
+                } else {
+                    answersText += `Reconocido por (Nombre Escrito): [No proporcionado, pero casilla marcada]\n`;
+                }
+
+                if (legalTermsDetailsElement) {
+                    const wasOpen = legalTermsDetailsElement.open;
+                    legalTermsDetailsElement.open = true; // Temporarily open to get full text
+                    const fullLegalText = legalTermsDetailsElement.textContent.replace(/\s+/g, ' ').trim();
+                    answersText += `Términos Legales Completos Revisados: ${fullLegalText.substring(0, 500)}...\n`; // Truncate for mailto URL length
+                    legalTermsDetailsElement.open = wasOpen; // Revert to original state
+                }
+            } else {
+                answersText += `Consentimiento: No Aceptado (Casilla Desmarcada)\n`;
+                answersText += `Reconocido por (Nombre Escrito): [No proporcionado]\n`;
+            }
+
+            return encodeURIComponent(answersText); // Encode for URL
+        }
+
+
+        // --- Document Ready and Form Submission Logic ---
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all textareas with pre-filled answers on load
+            document.querySelectorAll('textarea').forEach(textarea => {
+                setInitialAnswer(textarea);
+            });
+
+            // Get form elements and the form itself
+            const loveQuizForm = document.getElementById('loveQuizForm');
+            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
+            const fullNameInput = document.getElementById('fullNameInput');
+            const signatureBox = document.getElementById('signatureBox');
+            const displayedSignature = document.getElementById('displayedSignature');
+            const legalTermsDetails = document.getElementById('legalTermsDetails');
+            const senderEmailInput = document.getElementById('senderEmail');
+            const submitFormButton = document.getElementById('submitFormButton');
+            const sendEmailClientButton = document.getElementById('sendEmailClientButton'); // New button
+
+
+            // Toggle signature box visibility based on checkbox
+            if (consentCheckboxFinal && fullNameInput && signatureBox && displayedSignature) {
+                consentCheckboxFinal.addEventListener('change', function() {
+                    if (this.checked) {
+                        signatureBox.classList.remove('hidden');
+                        if (fullNameInput.value.trim() !== '') {
+                            displayedSignature.textContent = fullNameInput.value.trim();
+                        }
+                    } else {
+                        signatureBox.classList.add('hidden');
+                        displayedSignature.textContent = '';
+                        fullNameInput.value = '';
+                    }
+                });
+
+                fullNameInput.addEventListener('input', function() {
+                    displayedSignature.textContent = this.value.trim();
+                });
+            }
+
+            // *** MAIN FORM SUBMISSION LOGIC FOR FORMSPREE ***
+            if (loveQuizForm && submitFormButton) {
+                loveQuizForm.addEventListener('submit', async function(event) {
+                    event.preventDefault(); // Prevent default browser form submission
+
+                    // --- 1. Perform Validations ---
+                    if (!legalTermsDetails.open) {
+                         showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Primero Revisa los Términos!</p>
+                            <p class="text-gray-700 mb-6">Por favor, expande "Haz clic para revisar los Términos y Condiciones" para revisar los términos antes de continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        legalTermsDetails.open = true; // Auto-open for user
+                        return;
+                    }
+
+                    if (!consentCheckboxFinal || !consentCheckboxFinal.checked) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Consentimiento Requerido!</p>
+                            <p class="text-gray-700 mb-6">Por favor, marca la casilla para aceptar los Términos, el Consentimiento y la No Divulgación antes de continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        consentCheckboxFinal.focus();
+                        return;
+                    }
+
+                    const senderEmail = senderEmailInput.value.trim();
+                    if (!senderEmail) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Uy! Falta tu Correo Electrónico</p>
+                            <p class="text-gray-700 mb-6">Por favor, introduce tu dirección de correo electrónico para continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        return;
+                    }
+                    if (!isValidEmail(senderEmail)) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Formato de Correo Electrónico Inválido</p>
+                            <p class="text-gray-700 mb-6">Por favor, introduce una dirección de correo electrónico válida (por ejemplo, tunombre@ejemplo.com) para continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</p>
+                        `);
+                        return;
+                    }
+
+                    const acknowledgedName = fullNameInput.value.trim();
+                    if (!acknowledgedName) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Por Favor, Reconoce!</p>
+                            <p class="text-gray-700 mb-6">Amablemente, escribe tu nombre completo en la sección de reconocimiento para confirmar tu consentimiento.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        fullNameInput.focus();
+                        return;
+                    }
+
+                    // --- 2. Prepare Form Data for Formspree ---
+                    const formData = new FormData(loveQuizForm);
+
+                    // Filter out pre-filled answers if they haven't been changed by the user.
+                    // Formspree will receive empty strings for these, which is what we want.
+                    document.querySelectorAll('main textarea').forEach(textarea => {
+                        const qId = textarea.id;
+                        if (prefilledAnswers[qId] && textarea.value.trim() === prefilledAnswers[qId]) {
+                            formData.set(textarea.name, ''); // Set to empty string
+                        }
+                    });
+
+                    // Manually add the legal consent text and acknowledgment details
+                    // Formspree will include these as separate fields in the email
+                    formData.append('--- Detalles de Consentimiento Legal y Reconocimiento ---', ''); // Separator
+
+                    // Extract text from the legal terms details. outerText gets visible text.
+                    // We need to temporarily force it open to get all text.
+                    const legalTermsDetailsElement = document.getElementById('legalTermsDetails');
+                    if (legalTermsDetailsElement) {
+                        const wasOpen = legalTermsDetailsElement.open; // Store original state
+                        legalTermsDetailsElement.open = true; // Force open
+                        // Get the full text content, clean it up a bit
+                        const fullLegalText = legalTermsDetailsElement.textContent.replace(/\s+/g, ' ').trim();
+                        formData.append('Términos y Condiciones Legales Completos', fullLegalText);
+                        legalTermsDetailsElement.open = wasOpen; // Revert to original state
+                    }
+                    
+                    const consentStatus = consentCheckboxFinal.checked ? 'Aceptado' : 'No Aceptado';
+                    const consentLabelElement = document.querySelector('label[for="consentCheckboxFinal"]');
+                    if (consentLabelElement) {
+                        // Extract just the core text of the label, removing checkbox/other elements if present
+                        const consentLabelText = Array.from(consentLabelElement.childNodes)
+                                                    .filter(node => node.nodeType === Node.TEXT_NODE)
+                                                    .map(node => node.textContent.trim())
+                                                    .join(' ');
+                        formData.append('Reconocimiento del Consentimiento', `${consentLabelText} - ${consentStatus}`);
+                    }
+
+                    const fullNameInputText = fullNameInput.value.trim();
+                    if (fullNameInputText) {
+                        formData.append('Reconocido por (Nombre Escrito)', fullNameInputText);
+                    }
+
+
+                    // --- 3. Submit to Formspree via Fetch API ---
+                    try {
+                        const response = await fetch(loveQuizForm.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'Accept': 'application/json' // Essential for AJAX submission without redirect
+                            }
+                        });
+
+                        if (response.ok) {
+                            showCustomModal(`
+                                <p class="text-lg font-semibold mb-4">¡Éxito! ¡Tus Respuestas Han Sido Enviadas!</p>
+                                <p class="text-gray-700 mb-6">Gracias por compartir tus pensamientos. Elijah recibirá tus respuestas directamente.</p>
+                                <button class="btn-primary" onclick="closeCustomModal()">Cerrar</button>
+                            `);
+                            loveQuizForm.reset(); // Clear the form after successful submission
+                            // Re-initialize prefilled answers after reset
+                            document.querySelectorAll('textarea').forEach(textarea => {
+                                setInitialAnswer(textarea);
+                            });
+                            consentCheckboxFinal.checked = false; // Uncheck consent
+                            signatureBox.classList.add('hidden'); // Hide signature box
+                            displayedSignature.textContent = ''; // Clear displayed signature
+                        } else {
+                            // Formspree returned an error (e.g., validation fail)
+                            const data = await response.json();
+                            let errorMessage = "Hubo un error al enviar tus respuestas. Por favor, inténtalo de nuevo.";
+                            if (data.errors && data.errors.length > 0) {
+                                errorMessage = data.errors.map(err => err.message).join(", ");
+                            }
+                            showCustomModal(`
+                                <p class="text-lg font-semibold mb-4">¡Envío Fallido!</p>
+                                <p class="text-gray-700 mb-6">${errorMessage}</p>
+                                <button class="btn-primary" onclick="closeCustomModal()">Cerrar</button>
+                            `);
+                        }
+                    } catch (error) {
+                        // Network error or other fetch-related issues
+                        console.error('Error de envío:', error);
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Error de Red!</p>
+                            <p class="text-gray-700 mb-6">No se pudo conectar con el servicio de envío. Por favor, verifica tu conexión a internet e inténtalo de nuevo.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Cerrar</button>
+                        `);
+                    }
+                });
+            }
+
+            // *** MAILTO SUBMISSION LOGIC ***
+            if (sendEmailClientButton) {
+                sendEmailClientButton.addEventListener('click', function() {
+                    // Perform the same validations as for Formspree
+                    if (!legalTermsDetails.open) {
+                         showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Primero Revisa los Términos!</p>
+                            <p class="text-gray-700 mb-6">Por favor, expande "Haz clic para revisar los Términos y Condiciones" para revisar los términos antes de continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        legalTermsDetails.open = true; // Auto-open for user
+                        return;
+                    }
+
+                    if (!consentCheckboxFinal || !consentCheckboxFinal.checked) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Consentimiento Requerido!</p>
+                            <p class="text-gray-700 mb-6">Por favor, marca la casilla para aceptar los Términos, el Consentimiento y la No Divulgación antes de continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        consentCheckboxFinal.focus();
+                        return;
+                    }
+
+                    const senderEmail = senderEmailInput.value.trim();
+                    if (!senderEmail) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Uy! Falta tu Correo Electrónico</p>
+                            <p class="text-gray-700 mb-6">Por favor, introduce tu dirección de correo electrónico para continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        return;
+                    }
+                    if (!isValidEmail(senderEmail)) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Formato de Correo Electrónico Inválido</p>
+                            <p class="text-gray-700 mb-6">Por favor, introduce una dirección de correo electrónico válida (por ejemplo, tunombre@ejemplo.com) para continuar.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</p>
+                        `);
+                        return;
+                    }
+
+                    const acknowledgedName = fullNameInput.value.trim();
+                    if (!acknowledgedName) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">¡Por Favor, Reconoce!</p>
+                            <p class="text-gray-700 mb-6">Amablemente, escribe tu nombre completo en la sección de reconocimiento para confirmar tu consentimiento.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Entendido</button>
+                        `);
+                        fullNameInput.focus();
+                        return;
+                    }
+
+                    // Collect all answers
+                    const emailBody = collectAnswersForMailto();
+                    const subject = encodeURIComponent('Mis Respuestas al Cuestionario de Relación de Avneet');
+
+                    // Construct mailto link
+                    const mailtoLink = `mailto:${RECIPIENT_EMAIL}?subject=${subject}&body=${emailBody}`;
+
+                    // Open email client
+                    window.location.href = mailtoLink;
+
+                    // Provide a confirmation to the user
+                    showCustomModal(`
+                        <p class="text-lg font-semibold mb-4">Abriendo tu Aplicación de Correo Electrónico...</p>
+                        <p class="text-gray-700 mb-6">En breve debería abrirse un nuevo borrador de correo electrónico con tus respuestas. Por favor, asegúrate de hacer clic en 'Enviar' en tu aplicación de correo electrónico para completar el envío.</p>
+                        <button class="btn-primary" onclick="closeCustomModal()">De Acuerdo</button>
+                    `);
+
+                    // Optionally, reset form after attempting to open mailto
+                    // loveQuizForm.reset();
+                    // document.querySelectorAll('textarea').forEach(textarea => { setInitialAnswer(textarea); });
+                    // consentCheckboxFinal.checked = false;
+                    // signatureBox.classList.add('hidden');
+                    // displayedSignature.textContent = '';
+                });
+            }
+        });
+        
+        // Ensure the PDF download button still works as intended (no changes needed for this)
+    </script>
+</body>
+</html>
