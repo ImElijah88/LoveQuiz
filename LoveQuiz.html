@@ -551,7 +551,7 @@
             box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2);
         }
 
-        /* Style for the new direct submission box */
+        /* Style for the new direct submission box (Formspree) */
         .direct-submit-box {
             background-color: #fffbeb; /* Very light yellow */
             color: #854d0c; /* Darker yellow/orange text */
@@ -559,7 +559,7 @@
             border-radius: 0.75rem;
             padding: 1.5rem;
             margin-top: 3rem; /* Space above */
-            margin-bottom: 2rem; /* Space below */
+            margin-bottom: 1rem; /* Reduced margin to make space for mailto */
             text-align: center;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
@@ -577,6 +577,33 @@
         }
         .direct-submit-box .btn-primary:hover {
             background-color: #d97706; /* Darker on hover */
+        }
+
+        /* NEW: Style for the Mailto submission box */
+        .mailto-submit-box {
+            background-color: #e6f7ff; /* Light blue */
+            color: #0c4a6e; /* Darker blue text */
+            border: 1px solid #a3d9f7; /* Soft blue border */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin-top: 1.5rem; /* Space from Formspree box */
+            margin-bottom: 2rem; /* Space below */
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        .mailto-submit-box .message-text {
+            font-family: "Inter", sans-serif;
+            font-size: 1.05rem; /* Slightly smaller text for this option */
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+        .mailto-submit-box .btn-primary { /* Mailto button style */
+            background-color: #007bff; /* Standard blue */
+            color: white;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.2);
+        }
+        .mailto-submit-box .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
         }
 
         /* Keyframes for the pulse animation */
@@ -610,20 +637,29 @@
         }
 
         /* Google Translate Widget Styling */
-        /* Removed absolute positioning to integrate it into the flow */
         #google_translate_element_container {
             margin: 0 auto 2rem auto; /* Center it, add bottom margin */
             width: fit-content; /* Shrink to content */
-            background-color: #fdf6f9; /* Light pink background */
-            padding: 10px 20px; /* More padding */
-            border-radius: 12px; /* More rounded */
+            background-color: #fcebeb; /* Lighter pink background */
+            padding: 12px 25px; /* More padding for button feel */
+            border-radius: 15px; /* More rounded */
             box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Stronger shadow */
             display: flex;
             align-items: center;
-            gap: 10px; /* Space between label and dropdown */
-            color: #7b4f7f; /* Matching text color */
-            font-weight: 600;
+            gap: 12px; /* Space between label and dropdown */
+            color: #8c2f5d; /* Deeper rose/plum for text */
+            font-weight: 700; /* Bolder text */
+            font-size: 1.15rem; /* Larger font size */
+            cursor: pointer; /* Indicate it's clickable */
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #d18aab; /* Subtle border */
         }
+        #google_translate_element_container:hover {
+            background-color: #f8eaf0; /* Slightly darker pink on hover */
+            transform: translateY(-2px); /* Lift effect */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.12); /* Enhanced shadow on hover */
+        }
+
         /* Style the actual dropdown from Google Translate */
         #google_translate_element .goog-te-gadget {
             font-family: "Inter", sans-serif; /* Use Inter font */
@@ -631,13 +667,14 @@
             color: #4a2f4c; /* Darker text */
         }
         #google_translate_element select.goog-te-combo {
-            border: 1px solid #d18aab; /* Pinkish border */
+            border: 1px solid #e0b4c7; /* Pinkish border, lighter */
             border-radius: 8px; /* Rounded corners */
             padding: 8px; /* More padding for click area */
-            background-color: #fcebeb; /* Lighter pink background */
+            background-color: #fefefe; /* Very light background for dropdown */
             cursor: pointer;
             outline: none; /* Remove focus outline */
             transition: all 0.2s ease-in-out;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.05); /* Inner shadow */
         }
         #google_translate_element select.goog-te-combo:hover {
             border-color: #b34a79; /* Darker pink on hover */
@@ -687,10 +724,15 @@
                 Please take your time to reflect on each question and share your thoughtful insights. There are no right or wrong answers, only perspectives that help us understand each other more deeply as we consider our beautiful future together. Your honest thoughts are truly cherished.
             </p>
             <ul class="romantic-list handwritten-guide-text mt-4">
-                <li>**Translate the Quiz:** Use the "Select Language" dropdown above to translate the quiz into your preferred language.</li>
+                <li>**Translate the Quiz:** Use the "Select Language" option above to translate the quiz into your preferred language.</li>
                 <li>To fill out digitally: Open this file in any web browser. Type directly into the text boxes. The pre-filled suggestions will disappear when you type, and reappear if you leave a box empty.</li>
                 <li>To save as PDF: Click the "Download as PDF" button at the bottom of the page. This will open your browser's print dialog, where you can select "Save as PDF" (or a similar option like "Microsoft Print to PDF") as the destination.</li>
-                <li>To send your answers directly: Fill out the questionnaire, then use the "Send Answers Directly to Elijah" button below for seamless submission. The acknowledgment section will appear on the page when you agree to the terms.</li>
+                <li>**To send your answers back:** You now have two flexible options:
+                    <ul class="romantic-list handwritten-guide-text mt-2 ml-4">
+                        <li>**Option 1: Send Directly (Recommended):** After completing the quiz, use the "Send Answers Directly to Elijah ❤️" button below. This sends your answers securely via our service partner, and Elijah will receive them right away.</li>
+                        <li>**Option 2: Send via Your Email App (Alternative):** If the direct option isn't available or preferred, click the "Send Answers via Your Email App 📧" button. This will open your device's email program with your answers pre-filled. You can then send the email manually.</li>
+                    </ul>
+                </li>
                 <li class="mt-4 no-print">Once completed, we can discuss your responses together to deepen our mutual understanding.</li>
             </ul>
         </details>
@@ -884,29 +926,40 @@
                 <input type="email" id="senderEmail" name="_replyto" class="w-full" placeholder="name@example.com">
             </section>
 
-            <!-- NEW: Direct Submission Box -->
+            <!-- Formspree Direct Submission Box -->
             <div class="direct-submit-box no-print">
                 <p class="message-text">
-                    Thank you, my dear Avneet! I wanted to make this truly simple for you. When you feel ready, just click the button below, and your answers will come straight to my inbox. It's a secure, effortless way for us to grow even closer as we continue building our future. I'm so excited for our next conversation!
+                    Thank you for taking this first step! I wanted to make this truly simple for you. When you feel ready, just click the button below, and your answers will come straight to my inbox. It's a secure, effortless way for us to grow even closer as we continue building our future. I'm so excited for our next conversation!
                 </p>
                 <!-- This button will now submit the form directly to Formspree -->
                 <button type="submit" class="btn-primary" id="submitFormButton">
                     Send Answers Directly to Elijah ❤️
                 </button>
             </div>
+        </form> <!-- End of the FORM tag (moved so mailto button is outside form) -->
 
-            <!-- Footer (now only contains PDF button) -->
-            <footer class="text-center mt-12 p-4 bg-blue-50 rounded-lg border border-blue-200 no-print">
-                <h3 class="text-xl sm:text-2xl font-semibold text-blue-700 mb-3">Thank You for Your Thoughtful Responses!</h3>
-                <p class="text-gray-700 leading-relaxed mb-4">
-                    Your answers will provide valuable insights for our conversation about a shared future.
-                </p>
-                <button onclick="window.print()" class="btn-primary btn-pdf">
-                    Download as PDF
-                </button>
-                <p class="text-gray-600 text-lg font-semibold italic mt-4">With love, Elijah</p>
-            </footer>
-        </form> <!-- End of the FORM tag -->
+        <!-- NEW: Mailto Submission Box (Outside the Form) -->
+        <div class="mailto-submit-box no-print">
+            <p class="message-text">
+                As an alternative, if the direct sending option isn't working for you, you can also send your answers using your device's own email application. This will open a new email draft with all your responses ready to send.
+            </p>
+            <button type="button" class="btn-primary" id="sendEmailClientButton">
+                Send Answers via Your Email App 📧
+            </button>
+        </div>
+
+
+        <!-- Footer (now only contains PDF button) -->
+        <footer class="text-center mt-12 p-4 bg-blue-50 rounded-lg border border-blue-200 no-print">
+            <h3 class="text-xl sm:text-2xl font-semibold text-blue-700 mb-3">Thank You for Your Thoughtful Responses!</h3>
+            <p class="text-gray-700 leading-relaxed mb-4">
+                Your answers will provide valuable insights for our conversation about a shared future.
+            </p>
+            <button onclick="window.print()" class="btn-primary btn-pdf">
+                Download as PDF
+            </button>
+            <p class="text-gray-600 text-lg font-semibold italic mt-4">With love, Elijah</p>
+        </footer>
     </div>
 
     <!-- Google Translate Script -->
@@ -916,7 +969,6 @@
                 pageLanguage: 'en', // Original language of your page
                 includedLanguages: 'en,fr,de,es,it,ro', // English, French, German, Spanish, Italian, Romanian (add/remove as needed)
                 layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-                // Removed autoDisplay: false
             }, 'google_translate_element');
         }
     </script>
@@ -1027,6 +1079,68 @@
             return emailRegex.test(email);
         }
 
+        // Function to collect all answers for mailto
+        function collectAnswersForMailto() {
+            let answersText = '';
+
+            // 1. Collect Questionnaire Answers
+            document.querySelectorAll('main textarea').forEach(textarea => {
+                const questionLabel = textarea.previousElementSibling.textContent.trim();
+                let answer = textarea.value.trim();
+
+                // If the answer is still the pre-filled one, send an empty string.
+                if (prefilledAnswers[textarea.id] && answer === prefilledAnswers[textarea.id]) {
+                    answer = '';
+                }
+
+                answersText += `${questionLabel}\n`;
+                answersText += `Response: ${answer || '[No response provided]'}\n\n`;
+            });
+
+            // 2. Collect Email Address
+            const senderEmailInput = document.getElementById('senderEmail');
+            if (senderEmailInput && senderEmailInput.value.trim()) {
+                answersText += `--- Sender Information ---\n`;
+                answersText += `Sender Email: ${senderEmailInput.value.trim()}\n\n`;
+            }
+
+            // 3. Collect Legal Consent & Acknowledgment
+            const consentCheckboxFinal = document.getElementById('consentCheckboxFinal');
+            const legalTermsDetailsElement = document.getElementById('legalTermsDetails');
+            const fullNameInput = document.getElementById('fullNameInput');
+
+            answersText += `--- Legal Acknowledgment ---\n`;
+
+            if (consentCheckboxFinal && consentCheckboxFinal.checked) {
+                const consentLabelElement = document.querySelector('label[for="consentCheckboxFinal"]');
+                const consentLabelText = consentLabelElement ? Array.from(consentLabelElement.childNodes)
+                                                        .filter(node => node.nodeType === Node.TEXT_NODE)
+                                                        .map(node => node.textContent.trim())
+                                                        .join(' ') : '';
+                answersText += `Consent: ${consentLabelText} - Agreed\n`;
+
+                if (fullNameInput && fullNameInput.value.trim()) {
+                    answersText += `Acknowledged By (Typed Name): ${fullNameInput.value.trim()}\n`;
+                } else {
+                    answersText += `Acknowledged By (Typed Name): [Not provided, but checkbox checked]\n`;
+                }
+
+                if (legalTermsDetailsElement) {
+                    const wasOpen = legalTermsDetailsElement.open;
+                    legalTermsDetailsElement.open = true; // Temporarily open to get full text
+                    const fullLegalText = legalTermsDetailsElement.textContent.replace(/\s+/g, ' ').trim();
+                    answersText += `Full Legal Terms Reviewed: ${fullLegalText.substring(0, 500)}...\n`; // Truncate for mailto URL length
+                    legalTermsDetailsElement.open = wasOpen; // Revert to original state
+                }
+            } else {
+                answersText += `Consent: Not Agreed (Checkbox Unchecked)\n`;
+                answersText += `Acknowledged By (Typed Name): [Not provided]\n`;
+            }
+
+            return encodeURIComponent(answersText); // Encode for URL
+        }
+
+
         // --- Document Ready and Form Submission Logic ---
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize all textareas with pre-filled answers on load
@@ -1043,6 +1157,7 @@
             const legalTermsDetails = document.getElementById('legalTermsDetails');
             const senderEmailInput = document.getElementById('senderEmail');
             const submitFormButton = document.getElementById('submitFormButton');
+            const sendEmailClientButton = document.getElementById('sendEmailClientButton'); // New button
 
 
             // Toggle signature box visibility based on checkbox
@@ -1104,7 +1219,7 @@
                         showCustomModal(`
                             <p class="text-lg font-semibold mb-4">Invalid Email Format</p>
                             <p class="text-gray-700 mb-6">Please enter a valid email address (e.g., yourname@example.com) to proceed.</p>
-                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</p>
                         `);
                         return;
                     }
@@ -1211,6 +1326,85 @@
                             <button class="btn-primary" onclick="closeCustomModal()">Close</button>
                         `);
                     }
+                });
+            }
+
+            // *** MAILTO SUBMISSION LOGIC ***
+            if (sendEmailClientButton) {
+                sendEmailClientButton.addEventListener('click', function() {
+                    // Perform the same validations as for Formspree
+                    if (!legalTermsDetails.open) {
+                         showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Review Terms First!</p>
+                            <p class="text-gray-700 mb-6">Please expand "Click to review Terms & Conditions" to review the terms before proceeding.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        legalTermsDetails.open = true; // Auto-open for user
+                        return;
+                    }
+
+                    if (!consentCheckboxFinal || !consentCheckboxFinal.checked) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Consent Required!</p>
+                            <p class="text-gray-700 mb-6">Please check the box to agree to the Terms, Consent & Non-Disclosure before proceeding.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        consentCheckboxFinal.focus();
+                        return;
+                    }
+
+                    const senderEmail = senderEmailInput.value.trim();
+                    if (!senderEmail) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Oops! Your Email is Missing</p>
+                            <p class="text-gray-700 mb-6">Please enter your email address to proceed.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        return;
+                    }
+                    if (!isValidEmail(senderEmail)) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Invalid Email Format</p>
+                            <p class="text-gray-700 mb-6">Please enter a valid email address (e.g., yourname@example.com) to proceed.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</p>
+                        `);
+                        return;
+                    }
+
+                    const acknowledgedName = fullNameInput.value.trim();
+                    if (!acknowledgedName) {
+                        showCustomModal(`
+                            <p class="text-lg font-semibold mb-4">Please Acknowledge!</p>
+                            <p class="text-gray-700 mb-6">Kindly type your full name in the acknowledgment section to confirm your consent.</p>
+                            <button class="btn-primary" onclick="closeCustomModal()">Got It</button>
+                        `);
+                        fullNameInput.focus();
+                        return;
+                    }
+
+                    // Collect all answers
+                    const emailBody = collectAnswersForMailto();
+                    const subject = encodeURIComponent('My Relationship Questionnaire Answers from Avneet');
+
+                    // Construct mailto link
+                    const mailtoLink = `mailto:${RECIPIENT_EMAIL}?subject=${subject}&body=${emailBody}`;
+
+                    // Open email client
+                    window.location.href = mailtoLink;
+
+                    // Provide a confirmation to the user
+                    showCustomModal(`
+                        <p class="text-lg font-semibold mb-4">Opening Your Email App...</p>
+                        <p class="text-gray-700 mb-6">A new email draft should open shortly with your answers. Please ensure you click 'Send' in your email application to complete the submission.</p>
+                        <button class="btn-primary" onclick="closeCustomModal()">Okay</button>
+                    `);
+
+                    // Optionally, reset form after attempting to open mailto
+                    // loveQuizForm.reset();
+                    // document.querySelectorAll('textarea').forEach(textarea => { setInitialAnswer(textarea); });
+                    // consentCheckboxFinal.checked = false;
+                    // signatureBox.classList.add('hidden');
+                    // displayedSignature.textContent = '';
                 });
             }
         });
