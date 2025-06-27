@@ -489,7 +489,7 @@
             color: #d18aab;
             transition: transform 0.2s;
         }
-        .legal-terms-details details[open] summary::after {
+        details[open] summary::after {
             content: '-';
             transform: rotate(0deg);
         }
@@ -608,6 +608,52 @@
             animation: pulse 2s infinite ease-in-out; /* Apply pulse animation */
             text-shadow: 0 0 15px rgba(224, 74, 122, 0.5); /* Soft glow */
         }
+
+        /* Google Translate Widget Styling */
+        /* Removed absolute positioning to integrate it into the flow */
+        #google_translate_element_container {
+            margin: 0 auto 2rem auto; /* Center it, add bottom margin */
+            width: fit-content; /* Shrink to content */
+            background-color: #fdf6f9; /* Light pink background */
+            padding: 10px 20px; /* More padding */
+            border-radius: 12px; /* More rounded */
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); /* Stronger shadow */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between label and dropdown */
+            color: #7b4f7f; /* Matching text color */
+            font-weight: 600;
+        }
+        /* Style the actual dropdown from Google Translate */
+        #google_translate_element .goog-te-gadget {
+            font-family: "Inter", sans-serif; /* Use Inter font */
+            font-size: 1rem; /* Make text larger */
+            color: #4a2f4c; /* Darker text */
+        }
+        #google_translate_element select.goog-te-combo {
+            border: 1px solid #d18aab; /* Pinkish border */
+            border-radius: 8px; /* Rounded corners */
+            padding: 8px; /* More padding for click area */
+            background-color: #fcebeb; /* Lighter pink background */
+            cursor: pointer;
+            outline: none; /* Remove focus outline */
+            transition: all 0.2s ease-in-out;
+        }
+        #google_translate_element select.goog-te-combo:hover {
+            border-color: #b34a79; /* Darker pink on hover */
+            box-shadow: 0 0 0 3px rgba(209, 138, 171, 0.2);
+        }
+
+        /* Hide the default Google Translate banner */
+        .goog-te-banner-box {
+            display: none !important;
+        }
+        body > .skiptranslate {
+            display: none !important;
+        }
+        body {
+            top: 0px !important;
+        }
     </style>
 </head>
 <body class="p-4 sm:p-6 md:p-8 flex items-center justify-center min-h-screen">
@@ -622,6 +668,12 @@
             </p>
         </header>
 
+        <!-- Google Translate Widget Container (now prominent) -->
+        <div id="google_translate_element_container" class="no-print">
+            <span>Select Language:</span>
+            <div id="google_translate_element"></div>
+        </div>
+
         <!-- Instructions Section - now an expandable <details> tag -->
         <details id="gentleGuideDetails">
             <summary>
@@ -635,6 +687,7 @@
                 Please take your time to reflect on each question and share your thoughtful insights. There are no right or wrong answers, only perspectives that help us understand each other more deeply as we consider our beautiful future together. Your honest thoughts are truly cherished.
             </p>
             <ul class="romantic-list handwritten-guide-text mt-4">
+                <li>**Translate the Quiz:** Use the "Select Language" dropdown above to translate the quiz into your preferred language.</li>
                 <li>To fill out digitally: Open this file in any web browser. Type directly into the text boxes. The pre-filled suggestions will disappear when you type, and reappear if you leave a box empty.</li>
                 <li>To save as PDF: Click the "Download as PDF" button at the bottom of the page. This will open your browser's print dialog, where you can select "Save as PDF" (or a similar option like "Microsoft Print to PDF") as the destination.</li>
                 <li>To send your answers directly: Fill out the questionnaire, then use the "Send Answers Directly to Elijah" button below for seamless submission. The acknowledgment section will appear on the page when you agree to the terms.</li>
@@ -855,6 +908,19 @@
             </footer>
         </form> <!-- End of the FORM tag -->
     </div>
+
+    <!-- Google Translate Script -->
+    <script type="text/javascript">
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en', // Original language of your page
+                includedLanguages: 'en,fr,de,es,it,ro', // English, French, German, Spanish, Italian, Romanian (add/remove as needed)
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
     <script>
         // Store recipient email globally
