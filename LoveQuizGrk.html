@@ -6,9 +6,9 @@
     <title>Το Κοινό μας Ταξίδι: Ένα Ερωτηματολόγιο Σχέσης</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Dancing Script for a handwritten feel (still used for questions) -->
-    <!-- IMPORTANT: Added &subset=greek to ensure Greek characters are loaded for Dancing Script -->
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap&subset=greek" rel="stylesheet">
+    <!-- Google Fonts - Inter for main text, Noto Sans Greek for questions (improved Greek support) -->
+    <!-- Noto Sans Greek is known for excellent Unicode coverage, used to resolve font display issues. -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Sans+Greek:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Custom font for a more modern look, and romantic color palette */
         body {
@@ -261,9 +261,9 @@
             color: #5d4a66; /* Softer, slightly purplish gray */
             line-height: 1.8; /* More space for readability */
         }
-        /* Style for the handwritten questions */
+        /* Style for the handwritten questions - Now Noto Sans Greek */
         .handwritten-question-label {
-            font-family: 'Dancing Script', cursive;
+            font-family: 'Noto Sans Greek', sans-serif; /* Changed to Noto Sans Greek */
             font-weight: 700; /* Bold for questions */
             font-size: 1.5rem; /* Larger font size for readability */
             color: #7b4f7f; /* Plum-purple */
@@ -296,14 +296,14 @@
             display: none; /* Hide default arrow */
         }
         summary::after {
-            content: '+'; /* Custom plus icon */
+            content: '+';
             margin-left: auto; /* Push to the right */
             font-size: 2rem;
             color: #d18aab;
             transition: transform 0.2s;
         }
         details[open] summary::after {
-            content: '-'; /* Change to minus when open */
+            content: '-';
             transform: rotate(0deg);
         }
         details[open] summary {
@@ -333,7 +333,8 @@
         }
         /* Style for the new introduction text */
         .intro-section-text {
-            font-family: 'Dancing Script', cursive;
+            /* Changed to Noto Sans Greek, as it will be more reliable for a larger block of Greek text */
+            font-family: 'Noto Sans Greek', sans-serif;
             font-weight: 700; /* Bold for the introductory text */
             font-size: 1.8rem; /* Large font size for impact */
             color: #7b4f7f; /* Plum-purple to match questions */
@@ -452,8 +453,9 @@
             color: #6a4f70;
             margin-top: 0.75rem;
         }
+        /* Now using Noto Sans Greek for the dynamically displayed signature too, for consistency */
         .dancing-script-signature {
-            font-family: 'Dancing Script', cursive;
+            font-family: 'Noto Sans Greek', sans-serif; /* Changed to Noto Sans Greek */
             font-weight: 700;
             font-size: 2.5rem;
             color: #8c2f5d;
@@ -816,7 +818,7 @@
                             <li>**Προβλεπόμενη Χρήση των Πληροφοριών:** Οποιεσδήποτε πληροφορίες, γνώσεις ή προσωπικά δεδομένα μοιράζεστε σε αυτό το Έγγραφο προορίζονται για προσωπική και ιδιωτική χρήση του Ηλία και εσάς, με σκοπό την αμοιβαία κατανόηση της σχέσης και τη συζήτηση. Δεν προορίζεται για δημόσια αποκάλυψη, εμπορική χρήση ή οποιονδήποτε άλλο σκοπό εκτός του πλαισίου της ιδιωτικής σας εξερεύνησης σχέσης.</li>
                             <li>**Όχι Νομική Συμβουλή:** Αυτό το Έγγραφο και το περιεχόμενό του δεν αποτελούν νομική συμβουλή, ψυχολογική συμβουλή ή οποιοδήποτε άλλο είδος επαγγελματικής υπηρεσίας. Έχει σχεδιαστεί αποκλειστικά ως εργαλείο για προσωπική σκέψη και επικοινωνία.</li>
                             <li>**Μη Νομικά Δεσμευτικό:** Η συμπλήρωση και υποβολή αυτού του Εγγράφου, καθώς και τυχόν όροι που αναφέρονται σε αυτό, δεν αποτελούν νομικά δεσμευτική συμφωνία ή σύμβαση μεταξύ εσάς και του Ηλία, ούτε δημιουργούν οποιεσδήποτε επίσημες νομικές υποχρεώσεις ή δικαιώματα πέραν του πλαισίου μιας ιδιωτικής προσωπικής σχέσης.</li>
-                            <li>**Αποποίηση Ευθύνης:** Ο Ηλίας αποποιείται κάθε ευθύνης για τη χρήση ή κακή χρήση των πληροφοριών που περιέχονται σε αυτό το Έγγραφο, ή για τυχόν αποτελέσματα που προκύπτουν από τη συμμετοχή σας.</li>
+                            <li>**Αποποίηση Ευθύνης:** Ο Ηλίας αποποιείται κάθε ευθύνης για τη χρήση ή κακή χρήση των πληροφοριών που περιέχονται σε αυτό το Έγγραφο, ή για τυχόν αποτελέσματα που προκύπουν από τη συμμετοχή σας.</li>
                         </ul>
 
                         <h3 class="text-xl font-bold mt-6 mb-2">Σημείωση Εμπιστευτικότητας και Πνευματικών Δικαιωμάτων</h3>
@@ -917,7 +919,7 @@
             q9: "Τόσο η ιδιωτική οικειότητα όσο και ο δημόσιος σεβασμός είναι απαραίτητοι για την οικοδόμηση μιας ισχυρής και διαρκούς σχέσης. η ιδιωτική οικειότητα βαθαίνει τη σύνδεσή μας, ενώ ο δημόσιος σεβασμός προβάλλει τη σχέση μας με αξιοπρέπεια στον κόσμο.",
             q10: "Αυτό που μου αρέσει περισσότερο όταν περνάω χρόνο με έναν σύντροφο είναι όταν ασχολούμαστε με ουσιαστικές δραστηριότητες, αναπτυσσόμαστε στην πίστη, ή απλά εκτιμούμε στιγμές ήσυχης αφοσίωσης ο ένας στον άλλον.",
             q11: "Ο ποιοτικός χρόνος σημαίνει στιγμές συνειδητής σύνδεσης, πνευματικής τροφής και κοινού οράματος, εστιάζοντας στον πολύτιμο και αποκλειστικό χρόνο μαζί.",
-            q12: "Όταν αντιμετωπίζουμε δύσκολες αποφάσεις ή προκλήσεις, η υποστήριξη σημαίνει ενεργητική ακρόαση, προσευχή και αναζήτηση θείας καθοδήγησης. Η επικοινωνία πρέπει να είναι σαφής, ειλικρινής και ριζωμένη στην αγάπη και την υπομονή.",
+            q12: "Όταν αντιμετωπίζουμε δύσκολες αποφάσεις ή προκλήσεις, η υποστήρεξη σημαίνει ενεργητική ακρόαση, προσευχή και αναζήτηση θείας καθοδήγησης. Η επικοινωνία πρέπει να είναι σαφής, ειλικρινής και ριζωμένη στην αγάπη και την υπομονή.",
             q13: "Η δέσμευση είναι ένα δια βίου σύμφωνο ενώπιον του Θεού, που απαιτεί συνεχείς προσπάθειες, θυσίες και ακλόνητη αφοσίωση στην κοινή μας πνευματική και οικογενειακή πορεία."
         };
 
@@ -945,7 +947,7 @@
                 answersTextarea.style.height = 'auto';
                 answersTextarea.style.maxHeight = 'calc(90vh - 150px)';
                 answersTextarea.style.overflowY = 'auto';
-                answersTextarea.style.height = (answersTextarea.scrollHeight) + 'px';
+                answersTextarea.style.height = answersTextarea.scrollHeight + 'px';
             }
         }
 
@@ -964,7 +966,7 @@
                 textarea.value = prefilledAnswers[qId];
                 textarea.classList.add('initial-answer');
                 textarea.style.height = 'auto'; // Recalculate height
-                textarea.style.height = (textarea.scrollHeight) + 'px';
+                textarea.style.height = textarea.scrollHeight + 'px';
             }
         }
 
@@ -987,7 +989,7 @@
                 textarea.value = prefilledAnswers[qId];
                 textarea.classList.add('initial-answer');
                 textarea.style.height = 'auto'; // Recalculate height
-                textarea.style.height = (textarea.scrollHeight) + 'px';
+                textarea.style.height = textarea.scrollHeight + 'px';
             }
         }
 
@@ -995,7 +997,7 @@
         document.addEventListener('input', function (event) {
             if (event.target.tagName.toLowerCase() === 'textarea' && !event.target.classList.contains('initial-answer')) {
                 event.target.style.height = 'auto';
-                event.target.style.height = (event.target.scrollHeight) + 'px';
+                event.target.style.height = event.target.scrollHeight + 'px';
             }
         });
 
